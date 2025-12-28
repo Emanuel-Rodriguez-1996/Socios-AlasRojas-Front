@@ -1,0 +1,94 @@
+/* FILTROS */
+.filtros-container {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.filtros-container input, 
+.filtros-container select {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  flex: 1;
+  min-width: 140px;
+  background: white;
+}
+
+/* ACORDEONES */
+.accordion {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.accordion summary {
+  padding: 18px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion ul {
+  list-style: none;
+  padding: 0 20px 15px;
+  background: white;
+}
+
+.accordion li {
+  padding: 12px 0;
+  border-top: 1px solid #f9f9f9;
+}
+
+/* ESTADOS DE PAGO */
+.pago-si {
+  border-left: 6px solid #28a745 !important;
+  padding-left: 15px !important;
+}
+
+.pago-no {
+  border-left: 6px solid #dc3545 !important;
+  padding-left: 15px !important;
+  background-color: #fffafb;
+}
+
+@media (max-width: 600px) {
+  .filtros-container { flex-direction: column; }
+  .accordion summary { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+/*para el mensaje de carga*/
+.loading {
+  display: flex;
+  flex-direction: column; /* Reloj arriba, texto abajo */
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  width: 100%;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #000000;
+  gap: 15px; /* Espacio entre reloj y texto */
+}
+
+.spinner-reloj {
+  font-size: 2.5rem; /* Reloj más grande */
+  display: inline-block;
+  animation: spin 2s linear infinite; /* 2 segundos por vuelta, infinito */
+}
+
+/* La magia de la animación */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
