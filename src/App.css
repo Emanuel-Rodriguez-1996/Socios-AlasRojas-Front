@@ -48,7 +48,7 @@ body {
 .titulo {
   margin-bottom: 40px;
   font-size: 2.5rem;
-  font-family: cursive;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   color: #fcfcfc;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

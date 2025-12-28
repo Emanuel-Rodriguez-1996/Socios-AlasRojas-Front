@@ -1,94 +1,148 @@
-/* FILTROS */
-.filtros-container {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
+/* 1. RESET Y CONFIGURACIÓN BASE */
+.admin * {
+  box-sizing: border-box; /* Crucial para evitar desbordamientos en móviles */
 }
 
-.filtros-container input, 
-.filtros-container select {
+/* 2. CONTENEDOR DE FILTROS (UNIFICADO) */
+.filtros-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  align-items: flex-end; 
+  width: 100%;
+  margin-bottom: 25px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.03); /* Fondo sutil para agrupar */
+  border-radius: 12px;
+}
+
+/* 3. GRUPOS DE FILTRO */
+.filtro-grupo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Alineación a la izquierda se ve más formal */
+  gap: 6px;
+  flex: 1; 
+  min-width: 200px; /* Tamaño mínimo en escritorio */
+}
+
+.filtro-label {
+  color: #666; /* Gris un poco más oscuro para legibilidad */
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.filtro-grupo input, 
+.filtro-grupo select {
+  width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  flex: 1;
-  min-width: 140px;
   background: white;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
-/* ACORDEONES */
+.filtro-grupo input:focus, 
+.filtro-grupo select:focus {
+  border-color: #007bff;
+}
+
+/* 4. ACORDEONES (MEJORADOS) */
 .accordion {
   width: 100%;
   background: #ffffff;
   border: 1px solid #eee;
   border-radius: 10px;
   margin-bottom: 12px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  overflow: hidden; /* Mantiene el borde redondeado al abrir */
 }
 
 .accordion summary {
-  padding: 18px;
+  padding: 16px;
   cursor: pointer;
   font-weight: bold;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  list-style: none; /* Quita la flecha por defecto en algunos navegadores */
+}
+
+/* Indicador de flecha personalizado */
+.accordion summary::-webkit-details-marker {
+  display: none;
 }
 
 .accordion ul {
   list-style: none;
-  padding: 0 20px 15px;
-  background: white;
+  padding: 0 16px 16px;
+  margin: 0;
 }
 
 .accordion li {
   padding: 12px 0;
-  border-top: 1px solid #f9f9f9;
+  border-top: 1px solid #f1f1f1;
+  font-size: 0.95rem;
 }
 
-/* ESTADOS DE PAGO */
+/* 5. ESTADOS DE PAGO */
 .pago-si {
-  border-left: 6px solid #28a745 !important;
-  padding-left: 15px !important;
+  border-left: 5px solid #28a745 !important;
+  padding-left: 12px !important;
 }
 
 .pago-no {
-  border-left: 6px solid #dc3545 !important;
-  padding-left: 15px !important;
-  background-color: #fffafb;
+  border-left: 5px solid #dc3545 !important;
+  padding-left: 12px !important;
+  background-color: #fff9f9;
 }
 
+/* 6. RESPONSIVIDAD (LA PARTE MÁS IMPORTANTE) */
 @media (max-width: 600px) {
-  .filtros-container { flex-direction: column; }
-  .accordion summary { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .filtros-container {
+    gap: 20px;
+    padding: 10px;
+  }
+
+  .filtro-grupo {
+    min-width: 100%; /* Cada filtro ocupa todo el ancho en celulares */
+  }
+
+  .accordion summary {
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 6px; 
+    font-size: 0.9rem;
+  }
+
+  .accordion summary span {
+    font-weight: normal;
+    color: #666;
+    font-size: 0.8rem;
+  }
 }
-/*para el mensaje de carga*/
+
+/* 7. CARGA Y ANIMACIONES */
 .loading {
   display: flex;
-  flex-direction: column; /* Reloj arriba, texto abajo */
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 300px;
+  min-height: 400px;
   width: 100%;
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #000000;
-  gap: 15px; /* Espacio entre reloj y texto */
+  gap: 15px;
 }
 
 .spinner-reloj {
-  font-size: 2.5rem; /* Reloj más grande */
-  display: inline-block;
-  animation: spin 2s linear infinite; /* 2 segundos por vuelta, infinito */
+  font-size: 3rem;
+  animation: spin 2s linear infinite;
 }
 
-/* La magia de la animación */
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

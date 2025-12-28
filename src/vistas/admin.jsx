@@ -78,14 +78,14 @@ function Admin() {
 
   if (loading) {
     return (
-      <div className="admin"> 
+      <div className="admin">
         <div className="loading">
           <span className="spinner-reloj">⌛</span>
           <p style={{ color: "white" }}>Cargando Registros...</p>
         </div>
       </div>
     );
-  } 
+  }
 
   return (
     <div className="admin">
@@ -94,34 +94,54 @@ function Admin() {
       </button>
 
       <h2 className="titulo">📋 Registros de Socios</h2>
-      
+
       {!fullDataLoaded && (
         <p style={{ color: "#aaa", fontSize: "0.8rem", textAlign: "center" }}>
           Mostrando vista previa (últimos 20 registros). Use los filtros para ver todo.
         </p>
       )}
-
+      <br />
       <div className="filtros-container">
-        <input
-          type="text"
-          placeholder="Buscar Nro Socio..."
-          value={filtroSocio}
-          onChange={(e) => setFiltroSocio(e.target.value)}
-        />
-        <select value={filtroMes} onChange={(e) => setFiltroMes(e.target.value)}>
-          <option value="">Todos los Meses</option>
-          <option value="1">Enero</option><option value="2">Febrero</option>
-          <option value="3">Marzo</option><option value="4">Abril</option>
-          <option value="5">Mayo</option><option value="6">Junio</option>
-          <option value="7">Julio</option><option value="8">Agosto</option>
-          <option value="9">Septiembre</option><option value="10">Octubre</option>
-          <option value="11">Noviembre</option><option value="12">Diciembre</option>
-        </select>
-        <select value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
-          <option value="todos">Todos los Registros</option>
-          <option value="pagados">Solo Pagados ✅</option>
-          <option value="pendientes">Solo Pendientes ❌</option>
-        </select>
+        {/* Grupo 1: Socio */}
+        <div className="filtro-grupo">
+          <label className="filtro-label">Buscar por Socio</label>
+          <input
+            type="text"
+            placeholder="Buscar Nro Socio..."
+            value={filtroSocio}
+            onChange={(e) => setFiltroSocio(e.target.value)}
+          />
+        </div>
+
+        {/* Grupo 2: Mes */}
+        <div className="filtro-grupo">
+          <label className="filtro-label">Buscar por mes</label>
+          <select value={filtroMes} onChange={(e) => setFiltroMes(e.target.value)}>
+            <option value="">Todos los Meses</option>
+            <option value="1">Enero</option>
+            <option value="2">Febrero</option>
+            <option value="3">Marzo</option>
+            <option value="4">Abril</option>
+            <option value="5">Mayo</option>
+            <option value="6">Junio</option>
+            <option value="7">Julio</option>
+            <option value="8">Agosto</option>
+            <option value="9">Septiembre</option>
+            <option value="10">Octubre</option>
+            <option value="11">Noviembre</option>
+            <option value="12">Diciembre</option>
+          </select>
+        </div>
+
+        {/* Grupo 3: Estado */}
+        <div className="filtro-grupo">
+          <label className="filtro-label">Buscar por pagos/pendientes</label>
+          <select value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
+            <option value="todos">Todos los Registros</option>
+            <option value="pagados">Solo Pagados ✅</option>
+            <option value="pendientes">Solo Pendientes ❌</option>
+          </select>
+        </div>
       </div>
 
       {sociosFiltrados.length === 0 ? (
