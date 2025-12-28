@@ -40,8 +40,8 @@ body {
   width: 100%;
   max-width: 600px;
   height: 350px;
-  mask-image: radial-gradient(circle, black 5%, transparent 100%);
-  -webkit-mask-image: radial-gradient(circle, black 5%, transparent 100%);
+  /*mask-image: radial-gradient(circle, black 5%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle, black 5%, transparent 100%);*/
   border-radius: 20px;
 }
 
