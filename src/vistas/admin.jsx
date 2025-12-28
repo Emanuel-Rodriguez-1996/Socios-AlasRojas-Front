@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./vistAdmin.css";
 
 function Admin() {
+  const navigate = useNavigate();
   const [socios, setSocios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fullDataLoaded, setFullDataLoaded] = useState(false);
@@ -10,7 +12,6 @@ function Admin() {
   const [filtroMes, setFiltroMes] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("todos");
 
-  // Función para procesar los datos planos del API al formato de acordeón
   const procesarDatos = (data) => {
     const sociosMap = {};
     data.forEach((row) => {
@@ -32,7 +33,7 @@ function Admin() {
     return Object.values(sociosMap);
   };
 
-  // 1. CARGA INICIAL: Solo los últimos 20 registros para velocidad máxima
+  // 1. CARGA INICIAL (20 registros)
   useEffect(() => {
     fetch("https://socios-alasrojas-back.onrender.com/api/cobranzas?limit=20")
       .then((res) => res.json())
@@ -46,12 +47,10 @@ function Admin() {
       });
   }, []);
 
-  // 2. CARGA COMPLETA: Se dispara solo cuando el usuario interactúa con los filtros
+  // 2. CARGA COMPLETA AL FILTRAR
   useEffect(() => {
     const hayFiltrosActivos = filtroSocio !== "" || filtroMes !== "" || filtroEstado !== "todos";
-    
     if (hayFiltrosActivos && !fullDataLoaded) {
-      console.log("Filtros detectados: Cargando base de datos completa...");
       fetch("https://socios-alasrojas-back.onrender.com/api/cobranzas")
         .then((res) => res.json())
         .then((data) => {
@@ -62,7 +61,6 @@ function Admin() {
     }
   }, [filtroSocio, filtroMes, filtroEstado, fullDataLoaded]);
 
-  // Lógica de filtrado (se ejecuta sobre 'socios', ya sean los 5 iniciales o todos)
   const sociosFiltrados = socios.map(socio => {
     const cobranzasFiltradas = socio.cobranzas.filter(c => {
       const coincideMes = filtroMes === "" || c.mes === parseInt(filtroMes);
@@ -91,15 +89,17 @@ function Admin() {
 
   return (
     <div className="admin">
+      <button className="btn-volver" onClick={() => navigate("/")}>
+        ⬅ Volver al Inicio
+      </button>
+
       <h2 className="titulo">📋 Registros de Socios</h2>
       
       {!fullDataLoaded && (
         <p style={{ color: "#aaa", fontSize: "0.8rem", textAlign: "center" }}>
-          Mostrando vista previa (últimos 20 registros ingresados). Use los filtros para ver todos los registros.
+          Mostrando vista previa (últimos 20 registros). Use los filtros para ver todo.
         </p>
-        
       )}
-      <br />
 
       <div className="filtros-container">
         <input
@@ -108,7 +108,6 @@ function Admin() {
           value={filtroSocio}
           onChange={(e) => setFiltroSocio(e.target.value)}
         />
-
         <select value={filtroMes} onChange={(e) => setFiltroMes(e.target.value)}>
           <option value="">Todos los Meses</option>
           <option value="1">Enero</option><option value="2">Febrero</option>
@@ -118,7 +117,6 @@ function Admin() {
           <option value="9">Septiembre</option><option value="10">Octubre</option>
           <option value="11">Noviembre</option><option value="12">Diciembre</option>
         </select>
-
         <select value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
           <option value="todos">Todos los Registros</option>
           <option value="pagados">Solo Pagados ✅</option>
@@ -127,9 +125,7 @@ function Admin() {
       </div>
 
       {sociosFiltrados.length === 0 ? (
-        <p style={{ color: "white", textAlign: "center", marginTop: "20px" }}>
-          No se encontraron resultados.
-        </p>
+        <p style={{ color: "white", textAlign: "center", marginTop: "20px" }}>No se encontraron resultados.</p>
       ) : (
         sociosFiltrados.map((socio) => (
           <details key={socio.nro_socio} className="accordion">

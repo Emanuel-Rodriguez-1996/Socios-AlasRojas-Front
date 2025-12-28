@@ -101,6 +101,39 @@ body {
   transform: translateY(-5px);
 }
 
+.btn-volver {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #2c3e50; /* Azul oscuro formal */
+  color: #ffffff;
+  border: 1px solid #34495e;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.btn-volver:hover {
+  background-color: #ffffff;
+  color: #2c3e50;
+  border: 1px solid #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-volver:active {
+  transform: translateY(0);
+}
+
+
 /* --- CORRECCIÓN PARA DISPOSITIVOS MÓVILES (Reforzada) --- */
 @media (max-width: 670px) {
   .app-container,
@@ -179,5 +212,15 @@ body {
     display: flex;
     text-align: center;
     word-break: break-word;
+  }
+}
+
+/* Ajuste para dispositivos móviles */
+@media (max-width: 600px) {
+  .btn-volver {
+    padding: 8px 12px;
+    font-size: 12px;
+    top: 15px;
+    left: 15px;
   }
 }
