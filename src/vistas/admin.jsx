@@ -71,7 +71,7 @@ export default function Admin() {
 
       {sociosFiltrados.map(s => (
         <details key={s.nro_socio} className="accordion">
-          <summary>Socio {s.nro_socio} - {s.nombre} <span>({s.filtradas.length})</span></summary>
+          <summary>Socio {s.nro_socio} - {s.nombre} <span>(Total de registros-{s.filtradas.length})</span></summary>
           <ul>
             {s.filtradas.map(c => (
               <li key={c.id} className={c.pago ? "pago-si" : "pago-no"}>
