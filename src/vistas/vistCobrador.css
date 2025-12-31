@@ -4,10 +4,10 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background-color: rgba(240, 248, 255, 0.719);
+  background-color: rgba(240, 248, 255, 0.85);
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .form-cobrador label {
@@ -16,6 +16,26 @@
   font-weight: 600;
   font-size: 0.9rem;
   gap: 5px;
+  color: #333;
+}
+
+/* ALINEACIÓN CRÍTICA PARA EL CHECKBOX */
+.checkbox-moderno {
+  flex-direction: row !important;
+  /* Rompe la columna */
+  align-items: center !important;
+  /* Centra check con texto */
+  gap: 12px !important;
+  cursor: pointer;
+  margin: 10px 0;
+  user-select: none;
+}
+
+.checkbox-moderno input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  cursor: pointer;
 }
 
 .form-cobrador input,
@@ -26,14 +46,17 @@
   font-size: 1rem;
 }
 
-.checkbox {
-  flex-direction: row !important;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
+.anio-display {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin-bottom: 5px;
 }
 
-.form-cobrador button {
+/* BOTONES */
+.btn-save,
+.btn-update-status {
   padding: 14px;
   background-color: #007bff;
   color: white;
@@ -42,22 +65,152 @@
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
-  margin-top: 10px;
+
 }
 
-.form-cobrador button:hover:not(:disabled) {
+.btn-save:hover {
   background-color: #0056b3;
 }
 
-.form-cobrador button:disabled {
+.btn-update-status {
+  background-color: #2c3e50;
+}
+
+.btn-update-status:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
 
+/* SWITCH ESTILOS */
+.switch {
+  position: relative;
+  width: 160px;
+  height: 35px;
+  background-color: #ccc;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  margin: 15px auto;
+}
+
+.switch.on {
+  background-color: #4ade80;
+}
+
+.switch.off {
+  background-color: #ff4d4d;
+}
+
+.handle {
+  position: absolute;
+  width: 60px;
+  height: 25px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%;
+  top: 5px;
+  transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.on .handle {
+  left: 95px;
+}
+
+.off .handle {
+  left: 5px;
+}
+
+.label-on,
+.label-off {
+  font-weight: bold;
+  font-size: 0.73rem;
+  color: white;
+  z-index: 1;
+}
+
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.input-error {
+  border: 2px solid #ff4d4d !important;
+  background-color: #fff1f1;
+}
+
+/* Busca y corrige estas clases para que sean uniformes */
+.warning-text {
+  color: #ff9900;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-top: 5px;
+  display: block; /* Para que baje de línea */
+}
+.status-text {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: white;
+}
+.error-text {
+  color: #ff4d4d;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* AJUSTE PARA MÓVILES (Hasta 600px) */
 @media (max-width: 600px) {
-  .form-cobrador {
-    padding: 20px;
-    box-shadow: none;
-    border: 1px solid #eee;
+  .switch {
+    width: 150px;          /* Reducimos el ancho total */
+    height: 45px;          /* Un poco más bajo */
+    padding: 0 10px;       /* Menos espacio interno */
+    margin: 10px auto;     /* Menos margen vertical */
+  }
+
+  .handle {
+    width: 65px;           /* Bolita más pequeña */
+    height: 35px;
+    top: 5px;              /* Ajuste para centrar verticalmente */
+  }
+
+  /* Ajuste de posición de la bolita cuando está ON */
+  .on .handle {
+    left: 80px;            /* Ajustado al nuevo ancho de 120px */
+  }
+
+  .off .handle {
+    left: 5px;
+  }
+
+  .label-on, .label-off {
+    font-size: 0.65rem;    /* Texto un poco más pequeño */
+    letter-spacing: -0.5px; /* Unir un poco las letras para que quepan */
+  }
+
+  /* Ajuste extra para el botón de confirmar cambio */
+  .btn-update-status {
+    padding: 10px;
+    font-size: 0.9rem;
   }
 }

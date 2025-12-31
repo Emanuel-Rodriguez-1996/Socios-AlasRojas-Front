@@ -180,6 +180,13 @@ body {
     max-width: 300px; 
     height: 120px;
   }
+
+  .btn-volver {
+    padding: 8px 12px;
+    font-size: 12px;
+    top: 15px;
+    left: 15px;
+  }
 }
 
 
@@ -212,15 +219,5 @@ body {
     display: flex;
     text-align: center;
     word-break: break-word;
-  }
-}
-
-/* Ajuste para dispositivos móviles */
-@media (max-width: 600px) {
-  .btn-volver {
-    padding: 8px 12px;
-    font-size: 12px;
-    top: 15px;
-    left: 15px;
   }
 }

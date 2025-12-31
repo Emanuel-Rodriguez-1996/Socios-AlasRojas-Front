@@ -1,126 +1,145 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./vistCobrador.css"; 
+import "./vistCobrador.css";
+
+// Configuración fuera del componente para evitar re-renderizados
+const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+const API_URL = "https://socios-alasrojas-back.onrender.com/api";
 
 export default function Cobrador() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    nro_socio: "",
-    mes: "",
-    pago: false,
-    anio: new Date().getFullYear(),
-  });
-
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({ nro_socio: "", mes: "", pago: false, anio: new Date().getFullYear() });
+  const [loadingInicial, setLoadingInicial] = useState(true);
+  const [loadingAccion, setLoadingAccion] = useState(false);
+  const [listaSocios, setListaSocios] = useState([]);
   const [registroExistente, setRegistroExistente] = useState(null);
+  const [pagoActivo, setPagoActivo] = useState(false);
+  const [socioValido, setSocioValido] = useState(true);
 
   useEffect(() => {
-    const verificarEstado = async () => {
-      if (formData.nro_socio && formData.mes) {
+    const inicializar = async () => {
+      try {
+        const [resSocios] = await Promise.all([
+          fetch(`${API_URL}/socios`),
+          fetch(`${API_URL}/cobranzas`) // Despertar backend
+        ]);
+        setListaSocios(await resSocios.json());
+      } catch (err) { console.error("Error:", err); }
+      finally { setLoadingInicial(false); }
+    };
+    inicializar();
+  }, []);
+
+  useEffect(() => {
+    const verificar = async () => {
+      setRegistroExistente(null);
+      setSocioValido(true);
+      if (!formData.nro_socio) return;
+
+      const socio = listaSocios.find(s => s.nro_socio === parseInt(formData.nro_socio));
+      if (!socio) { setSocioValido(false); return; }
+
+      if (formData.mes) {
         try {
-          const res = await fetch(`https://socios-alasrojas-back.onrender.com/api/cobranzas`);
+          const res = await fetch(`${API_URL}/cobranzas`);
           const data = await res.json();
           const encontrado = data.find(c => 
             c.nro_socio === parseInt(formData.nro_socio) && 
             c.mes === parseInt(formData.mes) && 
             c.anio === formData.anio
           );
-          setRegistroExistente(encontrado || null);
           if (encontrado) {
-            setFormData(prev => ({ ...prev, pago: encontrado.pago }));
-          }
-        } catch (err) {
-          console.error("Error al verificar:", err);
-        }
+            setRegistroExistente(encontrado);
+            setPagoActivo(encontrado.pago);
+          } else { setPagoActivo(false); }
+        } catch (err) { console.error(err); }
       }
     };
-    verificarEstado();
-  }, [formData.nro_socio, formData.mes, formData.anio]);
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
-  };
+    verificar();
+  }, [formData.nro_socio, formData.mes, listaSocios, formData.anio]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setLoadingAccion(true);
     try {
-      const resSocio = await fetch(`https://socios-alasrojas-back.onrender.com/api/socios`);
-      const socios = await resSocio.json();
-      if (!socios.some(s => s.nro_socio === parseInt(formData.nro_socio))) {
-        alert("❌ El socio no existe.");
-        setLoading(false); return;
-      }
-
-      if (registroExistente?.pago) {
-        alert("Este mes ya está pago.");
-        setLoading(false); return;
-      }
-
+      const pagoFinal = registroExistente ? pagoActivo : formData.pago;
       const datosAEnviar = {
+        ...formData,
         nro_socio: parseInt(formData.nro_socio),
         mes: parseInt(formData.mes),
-        anio: formData.anio,
-        pago: formData.pago,
-        fecha_pago: formData.pago ? new Date().toISOString().split('T')[0] : null
+        pago: pagoFinal,
+        monto: 300,
+        fecha_pago: pagoFinal ? new Date().toISOString().split('T')[0] : null
       };
 
-      const metodo = registroExistente ? "PUT" : "POST";
-      const url = registroExistente 
-        ? `https://socios-alasrojas-back.onrender.com/api/cobranzas/${registroExistente.id}`
-        : "https://socios-alasrojas-back.onrender.com/api/cobranzas";
-
+      const url = registroExistente ? `${API_URL}/cobranzas/${registroExistente.id}` : `${API_URL}/cobranzas`;
       const response = await fetch(url, {
-        method: metodo,
+        method: registroExistente ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(datosAEnviar),
       });
 
       if (response.ok) {
-        alert("✅ Operación exitosa");
+        alert("✅ Éxito");
         setFormData({ ...formData, nro_socio: "", mes: "", pago: false });
-        setRegistroExistente(null);
       }
-    } catch (error) {
-      alert("❌ Error de conexión");
-    } finally {
-      setLoading(false);
-    }
+    } catch (error) { alert("❌ Error"); }
+    finally { setLoadingAccion(false); }
   };
+
+  if (loadingInicial) return (
+    <div className="vista-container loader-container">
+      <div className="spinner"></div>
+      <p className="status-text">Iniciando sistema...</p>
+    </div>
+  );
 
   return (
     <div className="vista-container">
-      <button className="btn-volver" onClick={() => navigate("/")}>⬅ Volver al Inicio</button>
-      <h1 className="titulo">Cobrar Mensualidad</h1>
+      <button className="btn-volver" onClick={() => navigate("/")}>⬅ Volver</button>
+      <h1 className="titulo">Registrar Cobros</h1>
+
       <form className="form-cobrador" onSubmit={handleSubmit}>
-        <div className="anio-display">Año: {formData.anio}</div>
-        <label>Mes a registrar
-          <select name="mes" value={formData.mes} onChange={handleChange} required>
-            <option value="">Seleccione mes</option>
-            <option value="1">Enero</option><option value="2">Febrero</option>
-            <option value="3">Marzo</option><option value="4">Abril</option>
-            <option value="5">Mayo</option><option value="6">Junio</option>
-            <option value="7">Julio</option><option value="8">Agosto</option>
-            <option value="9">Septiembre</option><option value="10">Octubre</option>
-            <option value="11">Noviembre</option><option value="12">Diciembre</option>
+        <div className="anio-display">Gestión de Cobro {formData.anio}</div>
+
+        <label>Mes
+          <select value={formData.mes} onChange={(e) => setFormData({ ...formData, mes: e.target.value })} required>
+            <option value="">Seleccione...</option>
+            {MESES.map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
           </select>
+          {formData.nro_socio && !formData.mes && <span className="warning-text">⚠️ Seleccione el mes</span>}
         </label>
-        <label>Nro de socio
-          <input type="number" name="nro_socio" value={formData.nro_socio} onChange={handleChange} required />
+
+        <label>Nº de Socio
+          <input type="number" value={formData.nro_socio} className={!socioValido ? "input-error" : ""}
+            onChange={(e) => setFormData({ ...formData, nro_socio: e.target.value })} required />
+          {!socioValido && <span className="error-text">🚫 Socio inexistente</span>}
+          {formData.mes && !formData.nro_socio && <span className="warning-text">⚠️ Ingrese Nº de socio</span>}
         </label>
-        {registroExistente && (
-          <div className={`mensaje-estado ${registroExistente.pago ? 'pago' : 'pendiente'}`}>
-            {registroExistente.pago ? "✅ Ya pagó." : "⚠️ Pendiente. Marque confirmar."}
-          </div>
-        )}
-        <label className="checkbox">
-          <input type="checkbox" name="pago" checked={formData.pago} onChange={handleChange} disabled={registroExistente?.pago} />
-          ¿Confirmar pago ahora?
-        </label>
-        <button type="submit" disabled={loading || registroExistente?.pago}>
-          {loading ? "Verificando..." : registroExistente ? "Confirmar Pago" : "Guardar Registro"}
-        </button>
+
+        {socioValido && formData.nro_socio && formData.mes ? (
+          registroExistente ? (
+            <div className="control-pago">
+              <p>Socio {formData.nro_socio} - {MESES[formData.mes - 1]}<br/><strong>{pagoActivo ? "PAGADO" : "PENDIENTE"}</strong></p>
+              <p>¿Quieres modificar el estado?</p>
+              <div className={`switch ${pagoActivo ? "on" : "off"}`} onClick={() => setPagoActivo(!pagoActivo)}>
+                <div className="handle"></div>
+                <span className="label-on">PAGO</span><span className="label-off">ANULAR</span>
+              </div>
+              <button type="submit" className="btn-update-status" disabled={loadingAccion || pagoActivo === registroExistente.pago}>
+                {loadingAccion ? "..." : "Confirmar Cambio"}
+              </button>
+            </div>
+          ) : (
+            <div className="nuevo-registro">
+              <label className="checkbox-moderno">
+                <input type="checkbox" checked={formData.pago} onChange={(e) => setFormData({ ...formData, pago: e.target.checked })} />
+                Confirmar pago de {MESES[formData.mes - 1]}
+              </label>
+              <button type="submit" className="btn-save" disabled={loadingAccion}>Registrar</button>
+            </div>
+          )
+        ) : (!formData.nro_socio && !formData.mes && <p className="warning-text">⚠️ Complete los datos para operar</p>)}
       </form>
     </div>
   );
