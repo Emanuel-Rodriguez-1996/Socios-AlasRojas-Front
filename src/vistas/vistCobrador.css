@@ -1,13 +1,14 @@
+/* --- 1. CONTENEDOR Y FORMULARIO --- */
 .form-cobrador {
   width: 100%;
   max-width: 400px;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background-color: rgba(240, 248, 255, 0.719);
+  background-color: rgba(240, 248, 255, 0.9);
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .form-cobrador label {
@@ -16,6 +17,7 @@
   font-weight: 600;
   font-size: 0.9rem;
   gap: 5px;
+  color: #333;
 }
 
 .form-cobrador input,
@@ -24,16 +26,125 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
+  transition: border-color 0.2s;
 }
 
-.checkbox {
+.form-cobrador input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.anio-display {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+/* --- 2. TARJETA DE ESTADO (SOCIO EXISTENTE) --- */
+.status-card {
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.status-label {
+  font-size: 0.9rem;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge {
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: 4px 0;
+}
+
+.status-pregunta {
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+  margin: 0;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  padding-top: 8px;
+}
+
+/* VARIACIONES DE COLOR DE LA TARJETA */
+.status-pagado {
+  background-color: #e8f5e9;
+  border-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.status-pendiente {
+  background-color: #fff3e0;
+  border-color: #ffe0b2;
+  color: #e65100;
+}
+
+/* --- 3. COMPONENTES DE INTERACCIÓN --- */
+.checkbox-moderno {
   flex-direction: row !important;
-  align-items: center;
-  gap: 10px;
+  align-items: center !important;
+  gap: 12px !important;
   cursor: pointer;
+  margin: 10px 0;
+  user-select: none;
 }
 
-.form-cobrador button {
+/* Switch de Pago */
+.switch {
+  position: relative;
+  width: 160px;
+  height: 35px;
+  background-color: #ccc;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  margin: 15px auto;
+}
+
+.switch.on { background-color: #4ade80; }
+.switch.off { background-color: #ff4d4d; }
+
+.handle {
+  position: absolute;
+  width: 60px;
+  height: 25px;
+  background-color: white;
+  border-radius: 50%;
+  top: 5px;
+  transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.on .handle { left: 95px; }
+.off .handle { left: 5px; }
+
+.label-on, .label-off {
+  font-weight: bold;
+  font-size: 0.73rem;
+  color: white;
+  z-index: 1;
+}
+
+/* --- 4. BOTONES --- */
+.btn-save, .btn-update-status {
   padding: 14px;
   background-color: #007bff;
   color: white;
@@ -42,22 +153,38 @@
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
-  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
-.form-cobrador button:hover:not(:disabled) {
-  background-color: #0056b3;
+.btn-save:hover { background-color: #0056b3; }
+.btn-update-status { background-color: #2c3e50; }
+.btn-update-status:disabled { background-color: #ccc; cursor: not-allowed; }
+
+/* --- 5. MENSAJES Y VALIDACIONES --- */
+.aviso-servidor {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  border: 1px solid #ffeeba;
 }
 
-.form-cobrador button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
+.warning-text { color: #ff9900; font-size: 0.8rem; font-weight: bold; margin-top: 5px; display: block; }
+.error-text { color: #ff4d4d; font-size: 0.8rem; font-weight: bold; margin-top: 5px; }
+.input-error { border: 2px solid #ff4d4d !important; background-color: #fff1f1; }
 
+/* --- 6. RESPONSIVIDAD --- */
 @media (max-width: 600px) {
-  .form-cobrador {
-    padding: 20px;
-    box-shadow: none;
-    border: 1px solid #eee;
-  }
+  .switch { width: 140px; height: 40px; }
+  .handle { width: 55px; height: 30px; top: 5px; }
+  .on .handle { left: 80px; }
+  
+  .form-cobrador { padding: 20px; }
+  
+  .status-badge { font-size: 1rem; }
 }
