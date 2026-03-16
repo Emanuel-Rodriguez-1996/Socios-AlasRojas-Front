@@ -2,46 +2,29 @@ import { useState, useEffect } from "react";
 
 const API_URL = "https://socios-alasrojas-back.onrender.com/api";
 
-export function useCobrador(formData) {
-  const [loadingInicial, setLoadingInicial] = useState(true);
+export function useCobrador(formData, preloadedSocios = [], preloadedCobranzas = [], isPreloading = false) {
   const [loadingAccion, setLoadingAccion] = useState(false);
   const [despertando, setDespertando] = useState(false);
-  const [listaSocios, setListaSocios] = useState([]);
   const [registroExistente, setRegistroExistente] = useState(null);
   const [socioValido, setSocioValido] = useState(true);
   const [pagoActivo, setPagoActivo] = useState(false);
   const [tipoPago, setTipoPago] = useState("mensual");
   const [socioActual, setSocioActual] = useState(null);
 
-  // ==========================
-  // Cargar socios
-  // ==========================
-  useEffect(() => {
-    const fetchSocios = async () => {
-      try {
-        const res = await fetch(`${API_URL}/socios`);
-        setListaSocios(await res.json());
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoadingInicial(false);
-      }
-    };
-    fetchSocios();
-  }, []);
+  // Solo mostramos loading inicial si no hay datos y la app está pre-cargando
+  const loadingInicial = isPreloading && preloadedSocios.length === 0;
 
-  // ==========================
-  // Verificar socio / cobranzas
-  // ==========================
   useEffect(() => {
-    const verificar = async () => {
+    const verificar = () => {
+      // 1. Reset de estados por defecto
       setRegistroExistente(null);
       setSocioValido(true);
       setSocioActual(null);
 
       if (!formData.nro_socio) return;
 
-      const socio = listaSocios.find(
+      // 2. Buscar socio en los datos globales
+      const socio = preloadedSocios.find(
         s => s.nro_socio === parseInt(formData.nro_socio, 10)
       );
 
@@ -53,88 +36,45 @@ export function useCobrador(formData) {
       setTipoPago(socio.tipo_pago || "mensual");
       setSocioActual(socio);
 
-      // Si no hay período seleccionado y no es anual → no buscamos nada todavía
+      // 3. Si no hay período seleccionado y no es anual, no buscamos cobranza
       if (!formData.mes && socio.tipo_pago !== "anual") return;
 
-      setDespertando(true);
+      // 4. Buscar registro de cobranza en los datos globales (Lógica de Verdad Única)
+      const nro = parseInt(formData.nro_socio, 10);
+      const anio = parseInt(formData.anio, 10);
+      let encontrado = null;
 
-      try {
-        const res = await fetch(`${API_URL}/cobranzas`);
-        const data = await res.json();
+      if (socio.tipo_pago === "mensual") {
+        const mesNum = parseInt(formData.mes, 10);
+        encontrado = preloadedCobranzas.find(c =>
+          c.nro_socio === nro && c.anio === anio && c.mes === mesNum
+        );
+      } 
+      else if (socio.tipo_pago === "semestral") {
+        const mesInicio = formData.mes === "S1" ? 1 : 7;
+        const mesFin = formData.mes === "S1" ? 6 : 12;
+        encontrado = preloadedCobranzas.find(c =>
+          c.nro_socio === nro && c.anio === anio && c.mes >= mesInicio && c.mes <= mesFin
+        );
+      } 
+      else if (socio.tipo_pago === "anual") {
+        encontrado = preloadedCobranzas.find(c =>
+          c.nro_socio === nro && c.anio === anio
+        );
+      }
 
-        const nro = parseInt(formData.nro_socio, 10);
-        const anio = formData.anio;
-
-        let encontrado = null;
-
-        // ==========================
-        // MENSUAL
-        // ==========================
-        if (socio.tipo_pago === "mensual") {
-          const mesNum = parseInt(formData.mes, 10);
-
-          encontrado = data.find(c =>
-            c.nro_socio === nro &&
-            c.anio === anio &&
-            c.mes === mesNum
-          );
-        }
-
-        // ==========================
-        // SEMESTRAL
-        // ==========================
-        else if (socio.tipo_pago === "semestral") {
-          let mesInicio = 0;
-          let mesFin = 0;
-
-          if (formData.mes === "S1") {
-            mesInicio = 1;
-            mesFin = 6;
-          } else if (formData.mes === "S2") {
-            mesInicio = 7;
-            mesFin = 12;
-          }
-
-          encontrado = data.find(c =>
-            c.nro_socio === nro &&
-            c.anio === anio &&
-            c.mes >= mesInicio &&
-            c.mes <= mesFin
-          );
-        }
-
-        // ==========================
-        // ANUAL
-        // ==========================
-        else if (socio.tipo_pago === "anual") {
-          encontrado = data.find(c =>
-            c.nro_socio === nro &&
-            c.anio === anio &&
-            c.mes >= 1 &&
-            c.mes <= 12
-          );
-        }
-
-        // ==========================
-        // RESULTADO
-        // ==========================
-        if (encontrado) {
-          setRegistroExistente(encontrado);
-          setPagoActivo(encontrado.pago);
-        } else {
-          // Nuevo registro → siempre pagado
-          setPagoActivo(true);
-        }
-
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setDespertando(false);
+      // 5. Aplicar resultado al estado local
+      if (encontrado) {
+        setRegistroExistente(encontrado);
+        setPagoActivo(encontrado.pago);
+      } else {
+        // Por defecto, si es nuevo, sugerimos que se va a pagar (pago: true)
+        setPagoActivo(true);
       }
     };
 
     verificar();
-  }, [formData.nro_socio, formData.mes, listaSocios, formData.anio]);
+  }, [formData.nro_socio, formData.mes, formData.anio, preloadedSocios, preloadedCobranzas]);
 
   return {
     loadingInicial,
