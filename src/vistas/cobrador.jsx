@@ -1,186 +1,227 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../comps/loading";
-import { useKeepAlive } from "../comps/useKeepAlive";
 import { useCobrador } from "../hooks/useCobrador";
 import "./vistCobrador.css";
 
 const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 const SEMESTRES = [{ label: "1er Semestre", value: "S1" }, { label: "2do Semestre", value: "S2" }];
 
+const KEYS = {
+  "1234": "Leandro",
+  "0000": "Admin"
+};
+
 export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, onUpdate }) {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const [activeTab, setActiveTab] = useState("pago");
+  
+  // Estados para Login
+  const [pass, setPass] = useState("");
+  const [operador, setOperador] = useState(""); 
+  const [error, setError] = useState(false);
+
+  // Estado para Formulario de Cobro
+  const [formData, setFormData] = useState({ nro_socio: "", mes: "", anio: new Date().getFullYear() });
+
+  // Estado para Formulario de Alta
+  const [datosAlta, setDatosAlta] = useState({
     nro_socio: "",
-    mes: "",
-    pago: true,
-    anio: new Date().getFullYear()
+    nombre: "",
+    apellido: "",
+    tel: "",
+    tipo_pago: "mensual"
   });
 
+  // Estado para Formulario de Baja
+  const [nroBaja, setNroBaja] = useState("");
+
   const {
-    loadingInicial, loadingAccion, setLoadingAccion, despertando, 
-    registroExistente, socioValido, pagoActivo, setPagoActivo, socioActual, tipoPago, API_URL
-  } = useCobrador(formData, globalSocios, globalCobranzas, isPreloading);
+    loadingInicial, loadingAccion, registroExistente, 
+    socioValido, pagoActivo, setPagoActivo, socioActual, tipoPago, 
+    handleSubmit, handleAlta, handleBaja 
+  } = useCobrador(formData, setFormData, globalSocios, globalCobranzas, onUpdate, operador);
 
-  useKeepAlive(`${API_URL}/socios`);
+  // Lógica para mostrar quién se va a borrar (Seguridad)
+  const socioABorrar = useMemo(() => {
+    if (!nroBaja) return null;
+    return globalSocios.find(s => s.nro_socio === parseInt(nroBaja, 10));
+  }, [nroBaja, globalSocios]);
 
-  const handleSubmit = async (e) => {
+  const verificarClave = (e) => {
     e.preventDefault();
-    if (loadingAccion || despertando) return;
-    setLoadingAccion(true);
-
-    try {
-      const esUpdate = Boolean(registroExistente);
-      const pagoFinal = esUpdate ? pagoActivo : true; 
-      const url = esUpdate ? `${API_URL}/cobranzas/${registroExistente.id}` : `${API_URL}/cobranzas`;
-
-      const payload = {
-        nro_socio: parseInt(formData.nro_socio, 10),
-        mes: formData.mes || null,
-        anio: parseInt(formData.anio, 10),
-        pago: pagoFinal,
-        fecha_registro: pagoFinal ? new Date().toLocaleDateString("sv-SE") : null
-      };
-
-      if (esUpdate) payload.monto = pagoFinal ? 180 : 0;
-
-      const res = await fetch(url, {
-        method: esUpdate ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      if (!res.ok) throw new Error("Error en la operación");
-
-      alert("✅ Operación exitosa");
-      if (onUpdate) await onUpdate(); 
-      setFormData(prev => ({ ...prev, nro_socio: "", mes: "" }));
-    } catch (error) {
-      alert(`❌ ${error.message}`);
-    } finally {
-      setLoadingAccion(false);
+    if (KEYS[pass]) {
+      setOperador(KEYS[pass]);
+      setError(false);
+    } else {
+      setError(true);
+      setPass("");
     }
   };
 
-  if (loadingInicial) {
-    return <Loading mensaje="Iniciando sistema y verificando servidor..." />;
+  const ejecutarAlta = async (e) => {
+    e.preventDefault();
+    const exito = await handleAlta(datosAlta);
+    if (exito) {
+      setDatosAlta({ nro_socio: "", nombre: "", apellido: "", tel: "", tipo_pago: "" });
+      setActiveTab("pago");
+    }
+  };
+
+  const ejecutarBaja = async (e) => {
+    e.preventDefault();
+    const exito = await handleBaja(nroBaja);
+    if (exito) {
+      setNroBaja("");
+      setActiveTab("pago");
+    }
+  };
+
+  if (loadingInicial) return <Loading mensaje="Cargando sistema..." />;
+
+  if (!operador) {
+    return (
+      <div className="vista-cobrador">
+        <button className="btn-volver" onClick={() => navigate("/")}>⬅ Volver</button>
+        <div className="login-box">
+          <h2>🔐 Acceso al Panel</h2>
+          <form onSubmit={verificarClave}>
+            <input 
+              type="password" 
+              placeholder="Ingrese clave..." 
+              value={pass}
+              onChange={(e) => setPass(e.target.value)}
+              autoFocus
+            />
+            {error && <p className="error-text">Clave incorrecta</p>}
+            <button type="submit" className="btn-entrar">Ingresar</button>
+          </form>
+        </div>
+      </div>
+    );
   }
 
-  // --- Lógica Visual Restaurada ---
   const etiquetaSocio = socioActual ? `${socioActual.nombre} ${socioActual.apellido}` : "—";
-  
   const etiquetaMes = tipoPago === "semestral"
-    ? (formData.mes === "S1" ? "1er Semestre" : formData.mes === "S2" ? "2do Semestre" : "Sin período")
+    ? (formData.mes === "S1" ? "1er Semestre" : "2do Semestre")
     : formData.mes ? MESES[parseInt(formData.mes, 10) - 1] : "Sin mes";
 
-  const etiquetaTipo = (tipoPago || "mensual").toUpperCase();
-
   return (
-    <div className="vista-container">
-      <button className="btn-volver" onClick={() => navigate("/")} disabled={despertando}>
-        ⬅ Volver
-      </button>
+    <div className="vista-cobrador">
+      <div className="header-simple">
+        <button className="btn-volver" onClick={() => navigate("/")}>⬅ Volver</button>
+        <span className="user-badge">Cobrador: <strong>{operador}</strong></span>
+      </div>
 
-      {despertando && (
-        <div className="aviso-servidor">
-          <Loading tipo="mini" mensaje="Sincronizando datos..." />
-        </div>
-      )}
+      <div className="tabs-container">
+        <button className={`tab-button ${activeTab === 'pago' ? 'active' : ''}`} onClick={() => setActiveTab('pago')}>Registrar Cobro</button>
+        <button className={`tab-button ${activeTab === 'alta' ? 'active' : ''}`} onClick={() => setActiveTab('alta')}>Alta Socio</button>
+        <button className={`tab-button ${activeTab === 'baja' ? 'active' : ''}`} onClick={() => setActiveTab('baja')}>Dar de Baja</button>
+      </div>
 
-      <form className="form-cobrador" onSubmit={handleSubmit}>
-        <div className="anio-display">Gestión de Cobro {formData.anio}</div>
+      <div className="form-cobrador">
+        
+        {/* PESTAÑA: PAGO */}
+        {activeTab === 'pago' && (
+          <form onSubmit={handleSubmit}>
+            <div className="anio-display">Registrar Pago</div>
+            <p className="gestion-texto">Gestión {formData.anio}</p>
 
-        <label>
-          Período
-          <select
-            value={formData.mes}
-            onChange={(e) => setFormData({ ...formData, mes: e.target.value })}
-            required={tipoPago !== "anual"}
-            disabled={despertando || tipoPago === "anual"}
-          >
-            <option value="">
-              {tipoPago === "anual" ? "Pago anual (no requiere período)" : "Seleccione el período..."}
-            </option>
-            {tipoPago === "semestral" && SEMESTRES.map((s, i) => (
-              <option key={i} value={s.value}>{s.label}</option>
-            ))}
-            {(!tipoPago || tipoPago === "mensual") && MESES.map((m, i) => (
-              <option key={i} value={(i + 1).toString()}>{m}</option>
-            ))}
-          </select>
-          {formData.nro_socio && !formData.mes && tipoPago !== "anual" && (
-            <span className="warning-text">⚠️ Seleccione el período</span>
-          )}
-        </label>
+            <label>Período
+              <select value={formData.mes} onChange={(e) => setFormData({ ...formData, mes: e.target.value })}
+               required={tipoPago !== "anual"} disabled={tipoPago === "anual"}>
+                <option value="">{tipoPago === "anual" ? "Pago anual" : "Seleccione..."}</option>
+                {tipoPago === "semestral" && SEMESTRES.map((s, i) => <option key={i} value={s.value}>{s.label}</option>)}
+                {(!tipoPago || tipoPago === "mensual") && MESES.map((m, i) => <option key={i} value={(i + 1).toString()}>{m}</option>)}
+              </select>
+            </label>
 
-        <label>
-          Nº de Socio
-          <input
-            type="number"
-            value={formData.nro_socio}
-            className={!socioValido ? "input-error" : ""}
-            onChange={(e) => setFormData({ ...formData, nro_socio: e.target.value })}
-            placeholder="Ej: 123"
-            required
-            disabled={despertando}
-          />
-          {!socioValido && <span className="error-text">🚫 Socio inexistente</span>}
-          {formData.mes && !formData.nro_socio && (
-            <span className="warning-text">⚠️ Ingrese Nº de socio</span>
-          )}
-        </label>
+            <label>Nº de Socio
+              <input type="number" value={formData.nro_socio} className={!socioValido ? "input-error" : ""} onChange={(e) => setFormData({ ...formData, nro_socio: e.target.value })} placeholder="Nro..." required />
+              {!socioValido && <span className="error-text">🚫 No existe</span>}
+            </label>
 
-        {socioValido && formData.nro_socio && (formData.mes || tipoPago === "anual") ? (
-          registroExistente ? (
-            <div className="control-pago">
-              <div className={`status-card ${pagoActivo ? "status-pagado" : "status-pendiente"}`}>
-                <div className="status-info">
-                  <span className="status-label">
-                    Socio {formData.nro_socio} / {etiquetaSocio} / {etiquetaMes}
-                  </span>
-                  <div className="status-badge">
-                    {pagoActivo ? "✓ REGISTRO PAGADO" : "⚠ PAGO PENDIENTE"}
+            {socioValido && formData.nro_socio && (formData.mes || tipoPago === "anual") ? (
+              registroExistente ? (
+                <div className="control-pago">
+                  <div className={`status-card ${pagoActivo ? "status-pagado" : "status-pendiente"}`}>
+                    <span className="status-label">{formData.nro_socio} - {etiquetaSocio} ({etiquetaMes})</span>
+                    <div className="status-badge">{pagoActivo ? "PAGADO" : "PENDIENTE"}</div>
                   </div>
+                  <div className={`switch ${pagoActivo ? "on" : "off"}`} onClick={() => setPagoActivo(!pagoActivo)}>
+                    <span className="label-off">ANULAR</span><div className="handle"></div><span className="label-on">PAGO</span>
+                  </div>
+                  <button type="submit" className="btn-update-status" disabled={loadingAccion || pagoActivo === registroExistente.pago}>
+                    {loadingAccion ? <Loading tipo="mini" /> : "Confirmar Cambio"}
+                  </button>
                 </div>
-                <p className="status-pregunta">¿Desea modificar el estado actual?</p>
-              </div>
-
-              <div className={`switch ${pagoActivo ? "on" : "off"}`}
-                   onClick={() => !despertando && setPagoActivo(prev => !prev)}>
-                <span className="label-off">ANULAR</span>
-                <div className="handle"></div>
-                <span className="label-on">PAGO</span>
-              </div>
-
-              <button
-                type="submit"
-                className="btn-update-status"
-                disabled={loadingAccion || pagoActivo === registroExistente.pago || despertando}
-              >
-                {loadingAccion ? <Loading tipo="mini" /> : "Confirmar Cambio"}
-              </button>
-            </div>
-          ) : (
-            <div className="status-card">
-              <span className="status-label">
-                Socio {formData.nro_socio} / {etiquetaSocio} / {etiquetaMes}
-                <div className="status-badge">Tipo {etiquetaTipo}</div>
-              </span>
-              <p className="status-pregunta">
-                ¿Registrar cobro como <strong className="status-pagado">✓ PAGADO</strong>?
-              </p>
-              <br />
-              <button type="submit" className="btn-update-status" disabled={loadingAccion || despertando}>
-                Registrar Cobro
-              </button>
-            </div>
-          )
-        ) : (
-          !formData.nro_socio && !formData.mes && (
-            <p className="warning-text">⚠️ Complete los datos para operar</p>
-          )
+              ) : (
+                <div className="status-card">
+                  <span className="status-label">{formData.nro_socio} - {etiquetaSocio} ({etiquetaMes})</span>
+                  <p className="status-pregunta">¿Registrar como <strong className="status-pagado">PAGADO</strong>?</p>
+                  <button type="submit" className="btn-update-status" disabled={loadingAccion}>
+                    {loadingAccion ? <Loading tipo="mini" /> : "Registrar"}
+                  </button>
+                </div>
+              )
+            ) : (!formData.nro_socio && !formData.mes && <p className="warning-text">⚠️ Ingrese datos</p>)}
+          </form>
         )}
-      </form>
+
+        {/* PESTAÑA: ALTA */}
+        {activeTab === 'alta' && (
+          <form onSubmit={ejecutarAlta}>
+            <div className="anio-display">Nuevo Socio</div>
+            <label>Nº Socio
+              <input type="number" value={datosAlta.nro_socio} onChange={(e)=>setDatosAlta({...datosAlta, nro_socio: e.target.value})} placeholder="Ej: 101" required />
+            </label>
+            <label>Nombre
+              <input type="text" value={datosAlta.nombre} onChange={(e)=>setDatosAlta({...datosAlta, nombre: e.target.value})} placeholder="Nombre..." required />
+            </label>
+            <label>Apellido
+              <input type="text" value={datosAlta.apellido} onChange={(e)=>setDatosAlta({...datosAlta, apellido: e.target.value})} placeholder="Apellido..." required />
+            </label>
+            <label>Teléfono
+              <input type="text" value={datosAlta.tel} onChange={(e)=>setDatosAlta({...datosAlta, tel: e.target.value})} placeholder="Tel/Cel..." />
+            </label>
+            <label>Categoria
+              <select value={datosAlta.tipo_pago} onChange={(e)=>setDatosAlta({...datosAlta, tipo_pago: e.target.value})}>
+                <option value="mensual">Mensual</option>
+                <option value="semestral">Semestral</option>
+                <option value="anual">Anual</option>
+              </select>
+            </label>
+            <button type="submit" className="btn-save" disabled={loadingAccion} style={{marginTop: '10px'}}>
+              {loadingAccion ? <Loading tipo="mini" /> : "Guardar Socio"}
+            </button>
+          </form>
+        )}
+
+        {/* PESTAÑA: BAJA */}
+        {activeTab === 'baja' && (
+          <form onSubmit={ejecutarBaja}>
+            <div className="anio-display">Dar de Baja</div>
+            <label>Nº de Socio
+              <input type="number" value={nroBaja} onChange={(e) => setNroBaja(e.target.value)} placeholder="Nro a eliminar..." required />
+            </label>
+            
+            {socioABorrar && (
+              <div className="status-card status-pendiente">
+                <span className="status-label">Se eliminará a:</span>
+                <div className="status-badge">{socioABorrar.nombre} {socioABorrar.apellido}</div>
+              </div>
+            )}
+
+            <div className="aviso-baja">
+              <p>⚠️ Atención: Se borrará el socio y todas sus cobranzas registradas.</p>
+            </div>
+            <button type="submit" className="btn-update-status" disabled={loadingAccion || !socioABorrar} style={{backgroundColor: '#e74c3c', marginTop: '10px'}}>
+              {loadingAccion ? <Loading tipo="mini" /> : "Confirmar Baja Definitiva"}
+            </button>
+          </form>
+        )}
+
+      </div>
     </div>
   );
 }

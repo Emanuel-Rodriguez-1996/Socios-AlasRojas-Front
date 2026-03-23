@@ -14,37 +14,6 @@ body {
   min-height: 100vh;
 }
 
-/* CONTENEDOR BASE */
-.app-container,
-.vista-container,
-.admin {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px 20px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-/* Home específica */
-.app-container {
-  justify-content: center;
-}
-
-.imgTit {
-  background-image: url('/fondo.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  width: 100%;
-  max-width: 600px;
-  height: 350px;
-  mask-image: radial-gradient(circle, black 5%, transparent 100%);
-  -webkit-mask-image: radial-gradient(circle, black 5%, transparent 100%);
-  border-radius: 20px;
-}
-
 /* Variante para Títulos de Formulario y Panel (Cobrador y Admin) */
 .titulo-seccion {
   font-family: 'Segoe UI', sans-serif; /* Usamos la fuente moderna del reset */
@@ -53,93 +22,9 @@ body {
 }
 
 
-
-
-/* CARDS DE LA HOME */
-.cards-container {
-  display: flex;
-  gap: 30px;
-  width: 100%;
-  justify-content: center;
-}
-
-.card {
-  width: 100%;
-  max-width: 300px;
-  height: 180px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  user-select: none;
-  background-color: #3a3939d5;
-}
-
-.card-cobrador {
-  border: 2px solid #2196f3;
-  color: #2196f3;
-}
-
-.card-cobrador:hover {
-  background-color: #2196f3;
-  color: #e3f2fd;
-  border: 2px solid #e3f2fd;
-  transform: translateY(-5px);
-}
-
-.card-admin {
-  border: 2px solid #e91e63;
-  color: #e91e63;
-}
-
-.card-admin:hover {
-  background-color: #e91e63;
-  color: #fce4ec;
-  border: 2px solid #fce4ec;
-  transform: translateY(-5px);
-}
-
-.btn-volver {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background-color: #2c3e50; /* Azul oscuro formal */
-  color: #ffffff;
-  border: 1px solid #34495e;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-}
-
-.btn-volver:hover {
-  background-color: #ffffff;
-  color: #2c3e50;
-  border: 1px solid #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.btn-volver:active {
-  transform: translateY(0);
-}
-
-
 /* --- CORRECCIÓN PARA DISPOSITIVOS MÓVILES (Reforzada) --- */
 @media (max-width: 670px) {
-  .app-container,
-  .vista-container,
+  
   .admin {
     padding-top: 100px !important;
     padding-left: 15px !important;
@@ -147,40 +32,10 @@ body {
     justify-content: flex-start !important;
   }
 
-  .imgTit {
-    /* 1. COMPORTAMIENTO IGUAL A LAS CARDS */
-    width: 100%;           /* Ocupa el mismo ancho que el contenedor de las cards */
-    max-width: 400px;      /* Evita que se haga gigante, pero permite que encoja */
-    height: auto;          /* La altura ya no es fija */
-    aspect-ratio: 16 / 9;  /* Mantiene la proporción mientras se achica */
-    margin-top: 0;
-    margin-bottom: 10px;
-    mask-image: radial-gradient(circle, black 30%, transparent 95%);
-    -webkit-mask-image: radial-gradient(circle, black 30%, transparent 95%);
-    
-    background-size: cover; 
-    background-position: center;
-    border-radius: 15px;
-  }
-
   .titulo {
     font-size: 2.5rem;
     margin-bottom: 25px !important;
     text-align: center;
-  }
-
-  .cards-container {
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-  }
-
-  .card {
-    /* Esto es lo que hace que las cards se encojan bien */
-    width: 100%; 
-    max-width: 300px; 
-    height: 120px;
   }
 
   .btn-volver {
@@ -193,12 +48,6 @@ body {
 
 
 @media (max-width: 350px) {
-  .imgTit {
-    /* aumentamos la nitidez del centro del difuminado */
-    mask-image: radial-gradient(circle, black 50%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle, black 50%, transparent 100%);
-  }
-  
   .titulo {
     font-size: 1.8rem;
   }
@@ -206,20 +55,93 @@ body {
 
 /* AJUSTE PARA PANTALLAS ULTRA PEQUEÑAS (Menos de 224px) */
 @media (max-width: 224px) {
-  .card {
-    font-size: 1rem !important; /* Achicamos la letra significativamente */
-    padding: 10px;             /* Reducimos el espacio interno */
-    height: 80px !important;    /* Hacemos la card un poco más baja */
-  }
-
   .titulo {
     font-size: 1.8rem !important; /* También achicamos el título para que no rompa */
   }
+}
 
-  /* Ajuste específico para que el emoji y el texto quepan en una sola línea */
-  .card-admin, .card-cobrador {
-    display: flex;
-    text-align: center;
-    word-break: break-word;
-  }
+/* Contenedor principal */
+.main-layout {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Botón Hamburguesa */
+.hamburger-menu {
+  position: fixed;
+  top: 40px;
+  right: 20px;
+  z-index: 1000;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.bar {
+  width: 30px;
+  height: 4px;
+  background-color: rgb(221, 218, 218);
+  transition: 0.3s;
+  border-radius: 2px;
+}
+
+/* Menú Lateral */
+/* --- 1. VOLVER AL ESTILO ORIGINAL DEL MENÚ --- */
+.side-nav {
+  position: fixed;
+  top: 0;
+  right: -250px;
+  width: 250px;
+  height: 100%;
+  
+  /* Volvemos al fondo sólido original */
+  background: #2c3e50;
+  
+  /* Quitamos el padding-top exagerado, lo manejaremos con el logo */
+  padding-top: 20px; 
+  
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+}
+
+.side-nav.active {
+  right: 0;
+}
+
+
+/* --- ALINEACIÓN PARA EL LOGO --- */
+.side-nav-logo-container {
+  display: flex;
+  justify-content: flex-start; 
+  padding: 0px 0px 15px/*abajo*/ 15px/*derecho */; 
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+}
+
+.side-nav-logo {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 20%;
+  border: 2px solid #34495e;
+  background: white;        
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* --- 3. ESTILOS DE ENLACES (MANTENER LOS TUYOS) --- */
+.side-nav a {
+  color: white;
+  padding: 15px 20px; /* Reduje un poco el padding vertical */
+  text-decoration: none;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #34495e;
+  font-weight: 600;
+}
+
+.side-nav a:hover {
+  background: #34495e;
 }
