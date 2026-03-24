@@ -1,25 +1,39 @@
-/* --- 1. CONTENEDOR Y FORMULARIO --- */
+:root {
+  --primary: #007bff;
+  --primary-dark: #0056b3;
+  --dark: #2c3e50;
+  --bg-form: rgba(240, 248, 255, 0.9);
+  --border: #ddd;
+  --radius: 8px;
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
 
-.vista-cobrador {
+/* --- 1. ESTRUCTURA Y FORMULARIO --- */
+.vista-cobrador, .form-cobrador, .status-info, .login-box form {
   display: flex;
   flex-direction: column;
+}
+
+.vista-cobrador {
   justify-content: center;
   align-items: center;
 }
 
-
-.form-cobrador {
+.form-cobrador, .login-box {
   width: 100%;
   max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  background-color: rgba(240, 248, 255, 0.9);
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  background-color: var(--bg-form);
+  box-shadow: var(--shadow);
+  border-radius: 0 0 12px 12px;
+}
+.login-box {
+  margin-top: 100px;
+   border-radius: 12px;
+   gap: 20px;
 }
 
+/* --- 2. INPUTS Y LABELS --- */
 .form-cobrador label {
   display: flex;
   flex-direction: column;
@@ -29,19 +43,97 @@
   color: #333;
 }
 
-.form-cobrador input,
-.form-cobrador select {
+.form-cobrador input, .form-cobrador select, .login-box input{
   padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   font-size: 1rem;
   transition: border-color 0.2s;
 }
 
-.form-cobrador input:focus {
-  border-color: #007bff;
+.form-cobrador input:focus, .login-box input:focus {
+  border-color: var(--primary);
   outline: none;
 }
+
+.input-error { border: 2px solid #ff4d4d !important; background-color: #fff1f1; }
+
+/* --- 3. BOTONES --- */
+.btn-save, .btn-update-status, .btn-entrar, .btn-volver {
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-save, .btn-entrar { background-color: var(--primary); color: white; }
+.btn-save:hover, .btn-entrar:hover { background-color: var(--primary-dark); }
+
+.btn-update-status { background-color: var(--dark); color: white; }
+.btn-update-status:disabled { background-color: #ccc; cursor: not-allowed; }
+
+.btn-volver {
+  position: absolute;
+  top: 20px; left: 20px;
+  background-color: var(--dark);
+  color: white;
+  z-index: 10;
+}
+.btn-volver:hover { background: white; color: var(--dark); border: 1px solid var(--dark); }
+
+/* --- 4. ESTADOS Y ALERTAS --- */
+.status-card {
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  transition: var(--transition);
+}
+
+.status-pagado { background: #e8f5e9; color: #2e7d32; }
+.status-pendiente { background: #fff3e0; color: #e65100; }
+
+.aviso-baja {
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  padding: 12px;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+}
+
+/* --- 5. SWITCH MODERNO --- */
+.switch {
+  position: relative;
+  width: 160px; height: 35px;
+  border-radius: 25px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  margin: 15px auto;
+  transition: background 0.3s;
+}
+.switch.on { background: #4ade80; }
+.switch.off { background: #ff4d4d; }
+
+.handle {
+  position: absolute;
+  width: 60px; height: 25px;
+  background: white;
+  border-radius: 50px;
+  left: 5px;
+  transition: var(--transition);
+}
+.on .handle { left: 95px; }
 
 .anio-display {
   text-align: center;
@@ -51,340 +143,53 @@
   margin-bottom: 5px;
 }
 
-.btn-volver {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background-color: #2c3e50; /* Azul oscuro formal */
-  color: #ffffff;
-  border: 1px solid #34495e;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
+.header-simple
+{
   display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  z-index: 10;
 }
-
-.btn-volver:hover {
-  background-color: #ffffff;
-  color: #2c3e50;
-  border: 1px solid #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.btn-volver:active {
-  transform: translateY(0);
-}
-
-/* --- 2. TARJETA DE ESTADO (SOCIO EXISTENTE) --- */
-.status-card {
-  padding: 15px;
-  border-radius: 10px;
-  text-align: center;
-  margin-bottom: 10px;
-  border: 1px solid transparent;
-  transition: all 0.3s ease;
-}
-
-.status-info {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.status-label {
-  font-size: 0.9rem;
-  color: #555;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.status-badge {
-  font-size: 1.1rem;
-  font-weight: 800;
-  padding: 4px 0;
-}
-
-.status-pregunta {
-  font-size: 0.85rem;
-  color: #666;
-  font-style: italic;
-  margin: 0;
-  border-top: 1px solid rgba(0,0,0,0.05);
-  padding-top: 8px;
-}
-
-/* VARIACIONES DE COLOR DE LA TARJETA */
-.status-pagado {
-  background-color: #e8f5e9;
-  border-color: #c8e6c9;
-  color: #2e7d32;
-}
-
-.status-pendiente {
-  background-color: #fff3e0;
-  border-color: #ffe0b2;
-  color: #e65100;
-}
-
-/* --- 3. COMPONENTES DE INTERACCIÓN --- */
-.checkbox-moderno {
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: 12px !important;
-  cursor: pointer;
-  margin: 10px 0;
-  user-select: none;
-}
-
-/* Switch de Pago */
-.switch {
-  position: relative;
-  width: 160px;
-  height: 35px;
-  background-color: #ccc;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 15px;
-  margin: 15px auto;
-}
-
-.switch.on { background-color: #4ade80; }
-.switch.off { background-color: #ff4d4d; }
-
-.handle {
-  position: absolute;
-  width: 60px;
-  height: 25px;
-  background-color: white;
-  border-radius: 50%;
-  top: 5px;
-  transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.on .handle { left: 95px; }
-.off .handle { left: 5px; }
-
-.label-on, .label-off {
-  font-weight: bold;
-  font-size: 0.73rem;
-  color: white;
-  z-index: 1;
-}
-
-/* --- 4. BOTONES --- */
-.btn-save, .btn-update-status {
-  padding: 14px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn-save:hover { background-color: #0056b3; }
-.btn-update-status { background-color: #2c3e50; }
-.btn-update-status:disabled { background-color: #ccc; cursor: not-allowed; }
-
-/* --- 5. MENSAJES Y VALIDACIONES --- */
-.aviso-servidor {
-  background-color: #fff3cd;
-  color: #856404;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  text-align: center;
-  border: 1px solid #ffeeba;
-}
-
-.warning-text { color: #ff9900; font-size: 0.8rem; font-weight: bold; margin-top: 5px; display: block; }
-.error-text { color: #ff4d4d; font-size: 0.8rem; font-weight: bold; margin-top: 5px; }
-.input-error { border: 2px solid #ff4d4d !important; background-color: #fff1f1; }
-
-/* --- 6. RESPONSIVIDAD --- */
-@media (max-width: 600px) {
-  .switch { width: 140px; height: 40px; }
-  .handle { width: 55px; height: 30px; top: 5px; }
-  .on .handle { left: 80px; }
-  
-  .form-cobrador { padding: 20px; }
-  
-  .status-badge { font-size: 1rem; }
-}
-
-/* --- 7. LOGIN Y AUTENTICACIÓN (NUEVO) --- */
-
-/* Contenedor del Muro de Clave */
-.login-box {
-  width: 100%;
-  max-width: 350px;
-  background-color: rgba(240, 248, 255, 0.95); /* Similar a tu form */
-  padding: 35px 25px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  text-align: center;
-  animation: fadeIn 0.4s ease-out;
-  margin-top: 40px;
-}
-
-.login-box h2 {
-  margin: 0 0 10px 0;
-  color: #2c3e50;
-  font-size: 1.4rem;
-}
-
-.login-box p {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 25px;
-}
-
-.login-box form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* Input de contraseña del login */
-.login-box input[type="password"] {
-  padding: 14px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  text-align: center;
-  letter-spacing: 3px; /* Espaciado para los puntos de la pass */
-  transition: all 0.3s;
-}
-
-.login-box input[type="password"]:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
-  outline: none;
-}
-
-/* Botón de ingreso */
-.btn-entrar {
-  padding: 14px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-entrar:hover {
-  background-color: #0056b3;
-}
-
-/* Header cuando ya estás logueado */
-.header-simple {
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
+/* --- Ajuste en el Badge --- */
 .user-badge {
   font-size: 0.85rem;
-  color: #2c3e50;
+  color: var(--dark);
   background: rgba(255, 255, 255, 0.6);
-  margin-top: 20px;
   padding: 5px 12px;
   border-radius: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
+  margin-top: 100px; 
+  white-space: nowrap;
 }
 
 .user-badge strong {
   color: #007bff;
 }
 
-/* --- 8. SISTEMA DE PESTAÑAS (TABS) --- */
-
+/* --- 6. TABS --- */
 .tabs-container {
   display: flex;
-  width: 100%;
-  max-width: 400px; /* Misma medida que tu form-cobrador */
-  margin-bottom: -1px; /* Truco para que muerda el borde del form */
-  z-index: 1;
+  width: 100%; max-width: 400px;
+  margin-top: 50px;
 }
 
 .tab-button {
-  flex: 1;
-  padding: 12px 5px;
-  border: 1px solid #ddd;
-  border-bottom: none; /* Quitamos el borde inferior para conectar con el form */
-  background-color: rgba(220, 230, 240, 0.7);
-  color: #666;
+  flex: 1; padding: 12px 5px;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  background: rgba(220, 230, 240, 0.7);
   cursor: pointer;
   font-weight: 600;
-  font-size: 0.9rem;
-  border-radius: 12px 12px 0 0; /* Solo redondeado arriba */
-  transition: all 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-}
-
-.tab-button:hover {
-  background-color: rgba(230, 240, 255, 0.9);
-  color: #007bff;
+  border-radius: 12px 12px 0 0;
+  transition: var(--transition);
 }
 
 .tab-button.active {
-  background-color: rgba(240, 248, 255, 0.9); /* El mismo color que tu form-cobrador */
-  color: #007bff;
-  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
-  border-color: #ddd;
-  padding-bottom: 13px; /* Aumentamos un poco para tapar el borde del form */
+  background: var(--bg-form);
+  color: var(--primary);
+  padding-bottom: 13px;
 }
 
-/* Ajuste al formulario para integrarse con las pestañas */
-.form-cobrador {
-  border-top-left-radius: 0; /* Lo hace cuadrado arriba a la izquierda si la pestaña 1 está activa */
-  /* Si prefieres que siempre sea recto arriba para todas las pestañas: */
-  border-radius: 0 0 12px 12px; 
-}
-
-/* Ajustes adicionales para las nuevas secciones */
-.gestion-texto {
-  text-align: center;
-  font-size: 0.85rem;
-  color: #7f8c8d;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.aviso-baja {
-  background-color: #fff5f5;
-  border: 1px solid #feb2b2;
-  color: #c53030;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  line-height: 1.4;
-  margin: 10px 0;
+/* --- 7. RESPONSIVIDAD --- */
+@media (max-width: 600px) {
+  .switch { width: 140px; }
+  .on .handle { left: 75px; }
+  .form-cobrador, .login-box { padding: 20px; }
 }

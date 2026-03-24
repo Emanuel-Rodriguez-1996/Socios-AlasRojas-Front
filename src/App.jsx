@@ -25,6 +25,8 @@ export default function App() {
         </div>
 
         <Link to="/cobrador" onClick={() => setMenuOpen(false)}>Administrador</Link>
+        <Link to="/" onClick={() => setMenuOpen(false)}>Socio</Link>
+        <Link to="/" onClick={() => setMenuOpen(false)}>Ciclista</Link>
       </nav>
 
       <div className="content">

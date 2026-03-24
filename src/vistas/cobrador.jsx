@@ -8,7 +8,7 @@ const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "
 const SEMESTRES = [{ label: "1er Semestre", value: "S1" }, { label: "2do Semestre", value: "S2" }];
 
 const KEYS = {
-  "1234": "Leandro",
+  "1234": "Tano Falopero de 4ta",
   "0000": "Admin"
 };
 
@@ -35,7 +35,6 @@ export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, 
 
   // Estado para Formulario de Baja
   const [nroBaja, setNroBaja] = useState("");
-
   const {
     loadingInicial, loadingAccion, registroExistente, 
     socioValido, pagoActivo, setPagoActivo, socioActual, tipoPago, 
@@ -84,7 +83,7 @@ export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, 
       <div className="vista-cobrador">
         <button className="btn-volver" onClick={() => navigate("/")}>⬅ Volver</button>
         <div className="login-box">
-          <h2>🔐 Acceso al Panel</h2>
+          <h2>🔐Panel Administrador</h2><br />
           <form onSubmit={verificarClave}>
             <input 
               type="password" 
@@ -94,6 +93,7 @@ export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, 
               autoFocus
             />
             {error && <p className="error-text">Clave incorrecta</p>}
+            <br />
             <button type="submit" className="btn-entrar">Ingresar</button>
           </form>
         </div>
@@ -125,8 +125,6 @@ export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, 
         {activeTab === 'pago' && (
           <form onSubmit={handleSubmit}>
             <div className="anio-display">Registrar Pago</div>
-            <p className="gestion-texto">Gestión {formData.anio}</p>
-
             <label>Período
               <select value={formData.mes} onChange={(e) => setFormData({ ...formData, mes: e.target.value })}
                required={tipoPago !== "anual"} disabled={tipoPago === "anual"}>
@@ -157,14 +155,14 @@ export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, 
                 </div>
               ) : (
                 <div className="status-card">
-                  <span className="status-label">{formData.nro_socio} - {etiquetaSocio} ({etiquetaMes})</span>
-                  <p className="status-pregunta">¿Registrar como <strong className="status-pagado">PAGADO</strong>?</p>
+                  <span className="status-label">Nº{formData.nro_socio} - {etiquetaSocio} ({etiquetaMes})</span>
+                  <p className="status-pregunta">¿Registrar como <strong className="status-pagado">PAGADO</strong>?</p> <br />
                   <button type="submit" className="btn-update-status" disabled={loadingAccion}>
                     {loadingAccion ? <Loading tipo="mini" /> : "Registrar"}
                   </button>
                 </div>
               )
-            ) : (!formData.nro_socio && !formData.mes && <p className="warning-text">⚠️ Ingrese datos</p>)}
+            ) : (!formData.nro_socio && !formData.mes)}
           </form>
         )}
 

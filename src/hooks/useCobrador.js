@@ -69,7 +69,7 @@ export function useCobrador(formData, setFormData, preloadedSocios = [], preload
 
       const payload = {
         nro_socio: parseInt(formData.nro_socio, 10),
-        mes: tipoPago === "anual" ? null : (tipoPago === "semestral" ? (formData.mes === "S1" ? 1 : 7) : parseInt(formData.mes)),
+        mes: tipoPago === "anual" ? null : formData.mes,
         anio: parseInt(formData.anio, 10),
         pago: pagoActivo,
         monto: montoFinal,
@@ -122,7 +122,7 @@ export function useCobrador(formData, setFormData, preloadedSocios = [], preload
   // --- 3. GESTIÓN DE BAJA DE SOCIO ---
   const handleBaja = async (nroSocio) => {
     if (!window.confirm(`¿Estás seguro de dar de baja al socio Nº ${nroSocio}?`)) return;
-    
+
     setLoadingAccion(true);
     try {
       const res = await fetch(`${API_URL}/socios/${nroSocio}`, {
@@ -143,8 +143,8 @@ export function useCobrador(formData, setFormData, preloadedSocios = [], preload
   };
 
   return {
-    loadingInicial, loadingAccion, registroExistente, 
-    socioValido, pagoActivo, setPagoActivo, socioActual, tipoPago, 
-    handleSubmit, handleAlta, handleBaja 
+    loadingInicial, loadingAccion, registroExistente,
+    socioValido, pagoActivo, setPagoActivo, socioActual, tipoPago,
+    handleSubmit, handleAlta, handleBaja
   };
 }

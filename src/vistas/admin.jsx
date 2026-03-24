@@ -24,6 +24,8 @@ export default function Admin({ preloadedCobranzas, isPreloading }) {
   }
 
   return (
+    <>
+    <img src="public/Titulo.png" alt="" className="imgTitulo"/>
     <div className="admin">
       
       {sociosFiltrados.length > 0 && (
@@ -104,5 +106,6 @@ export default function Admin({ preloadedCobranzas, isPreloading }) {
         )}
       </div>
     </div>
+    </>
   );
 }
