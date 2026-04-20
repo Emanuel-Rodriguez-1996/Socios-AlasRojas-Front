@@ -1,0 +1,58 @@
+/* Contenedor de pantalla completa */
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Spinner Base */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0, 123, 255, 0.1);
+  border-top: 5px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+/* Variante Mini (para botones y avisos) */
+.spinner.mini {
+  width: 18px;
+  height: 18px;
+  border-width: 3px;
+  margin-bottom: 0;
+  border-top-color: currentColor; /* Toma el color del texto del botón */
+}
+
+/* Wrapper para el spinner con texto al lado */
+.spinner-wrapper-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.status-text {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.mensaje-mini {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

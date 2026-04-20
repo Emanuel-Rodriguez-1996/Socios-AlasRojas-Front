@@ -1,0 +1,147 @@
+
+/* RESET GENERAL */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-image: url('/fondoProf.jpg');
+  background-size: 100% 100%;
+  background-position: center;
+  min-height: 100vh;
+}
+
+/* Variante para Títulos de Formulario y Panel (Cobrador y Admin) */
+.titulo-seccion {
+  font-family: 'Segoe UI', sans-serif; /* Usamos la fuente moderna del reset */
+  color: #f8f8f8;
+  margin-bottom: 30px;
+}
+
+
+/* --- CORRECCIÓN PARA DISPOSITIVOS MÓVILES (Reforzada) --- */
+@media (max-width: 670px) {
+  
+  .admin {
+    padding-top: 30px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    justify-content: flex-start !important;
+  }
+
+  .titulo {
+    font-size: 2.5rem;
+    margin-bottom: 25px !important;
+    text-align: center;
+  }
+
+  .btn-volver {
+    padding: 8px 12px;
+    font-size: 12px;
+    top: 15px;
+    left: 15px;
+  }
+}
+
+
+@media (max-width: 350px) {
+  .titulo {
+    font-size: 1.8rem;
+  }
+}
+
+/* AJUSTE PARA PANTALLAS ULTRA PEQUEÑAS (Menos de 224px) */
+@media (max-width: 224px) {
+  .titulo {
+    font-size: 1.8rem !important; /* También achicamos el título para que no rompa */
+  }
+}
+
+/* Contenedor principal */
+.main-layout {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Botón Hamburguesa */
+.hamburger-menu {
+  position: fixed;
+  top: 40px;
+  right: 20px;
+  z-index: 1000;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.bar {
+  width: 30px;
+  height: 4px;
+  background-color: rgb(221, 218, 218);
+  transition: 0.3s;
+  border-radius: 2px;
+}
+
+/* Menú Lateral */
+/* --- 1. VOLVER AL ESTILO ORIGINAL DEL MENÚ --- */
+.side-nav {
+  position: fixed;
+  top: 0;
+  right: -250px;
+  width: 250px;
+  height: 100%;
+  
+  /* Volvemos al fondo sólido original */
+  background: #2c3e50;
+  
+  /* Quitamos el padding-top exagerado, lo manejaremos con el logo */
+  padding-top: 20px; 
+  
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+}
+
+.side-nav.active {
+  right: 0;
+}
+
+
+/* --- ALINEACIÓN PARA EL LOGO --- */
+.side-nav-logo-container {
+  display: flex;
+  justify-content: flex-start; 
+  padding: 0px 0px 15px/*abajo*/ 15px/*derecho */; 
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+}
+
+.side-nav-logo {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 20%;
+  border: 2px solid #34495e;
+  background: white;        
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* --- 3. ESTILOS DE ENLACES (MANTENER LOS TUYOS) --- */
+.side-nav a {
+  color: white;
+  padding: 15px 20px; /* Reduje un poco el padding vertical */
+  text-decoration: none;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #34495e;
+  font-weight: 600;
+}
+
+.side-nav a:hover {
+  background: #34495e;
+}

@@ -1,0 +1,195 @@
+:root {
+  --primary: #007bff;
+  --primary-dark: #0056b3;
+  --dark: #2c3e50;
+  --bg-form: rgba(240, 248, 255, 0.9);
+  --border: #ddd;
+  --radius: 8px;
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+/* --- 1. ESTRUCTURA Y FORMULARIO --- */
+.vista-cobrador, .form-cobrador, .status-info, .login-box form {
+  display: flex;
+  flex-direction: column;
+}
+
+.vista-cobrador {
+  justify-content: center;
+  align-items: center;
+}
+
+.form-cobrador, .login-box {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--bg-form);
+  box-shadow: var(--shadow);
+  border-radius: 0 0 12px 12px;
+}
+.login-box {
+  margin-top: 100px;
+   border-radius: 12px;
+   gap: 20px;
+}
+
+/* --- 2. INPUTS Y LABELS --- */
+.form-cobrador label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  font-size: 0.9rem;
+  gap: 5px;
+  color: #333;
+}
+
+.form-cobrador input, .form-cobrador select, .login-box input{
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-cobrador input:focus, .login-box input:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.input-error { border: 2px solid #ff4d4d !important; background-color: #fff1f1; }
+
+/* --- 3. BOTONES --- */
+.btn-save, .btn-update-status, .btn-entrar, .btn-volver {
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-save, .btn-entrar { background-color: var(--primary); color: white; }
+.btn-save:hover, .btn-entrar:hover { background-color: var(--primary-dark); }
+
+.btn-update-status { background-color: var(--dark); color: white; }
+.btn-update-status:disabled { background-color: #ccc; cursor: not-allowed; }
+
+.btn-volver {
+  position: absolute;
+  top: 20px; left: 20px;
+  background-color: var(--dark);
+  color: white;
+  z-index: 10;
+}
+.btn-volver:hover { background: white; color: var(--dark); border: 1px solid var(--dark); }
+
+/* --- 4. ESTADOS Y ALERTAS --- */
+.status-card {
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  transition: var(--transition);
+}
+
+.status-pagado { background: #e8f5e9; color: #2e7d32; }
+.status-pendiente { background: #fff3e0; color: #e65100; }
+
+.aviso-baja {
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  padding: 12px;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+}
+
+/* --- 5. SWITCH MODERNO --- */
+.switch {
+  position: relative;
+  width: 160px; height: 35px;
+  border-radius: 25px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  margin: 15px auto;
+  transition: background 0.3s;
+}
+.switch.on { background: #4ade80; }
+.switch.off { background: #ff4d4d; }
+
+.handle {
+  position: absolute;
+  width: 60px; height: 25px;
+  background: white;
+  border-radius: 50px;
+  left: 5px;
+  transition: var(--transition);
+}
+.on .handle { left: 95px; }
+
+.anio-display {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.header-simple
+{
+  display: flex;
+}
+/* --- Ajuste en el Badge --- */
+.user-badge {
+  font-size: 0.85rem;
+  color: var(--dark);
+  background: rgba(255, 255, 255, 0.6);
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  margin-top: 100px; 
+  white-space: nowrap;
+}
+
+.user-badge strong {
+  color: #007bff;
+}
+
+/* --- 6. TABS --- */
+.tabs-container {
+  display: flex;
+  width: 100%; max-width: 400px;
+  margin-top: 50px;
+}
+
+.tab-button {
+  flex: 1; padding: 12px 5px;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  background: rgba(220, 230, 240, 0.7);
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 12px 12px 0 0;
+  transition: var(--transition);
+}
+
+.tab-button.active {
+  background: var(--bg-form);
+  color: var(--primary);
+  padding-bottom: 13px;
+}
+
+/* --- 7. RESPONSIVIDAD --- */
+@media (max-width: 600px) {
+  .switch { width: 140px; }
+  .on .handle { left: 75px; }
+  .form-cobrador, .login-box { padding: 20px; }
+}

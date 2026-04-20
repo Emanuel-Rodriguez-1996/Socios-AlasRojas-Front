@@ -1,0 +1,139 @@
+/* --- 1. CONFIGURACIÓN DEL CONTENEDOR --- */
+
+.admin {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.imgTitulo {
+  display: block; /* Para que margin: auto funcione */
+  margin-left: auto;
+  margin-right: auto;
+}
+/* --- 2. SISTEMA DE FILTROS --- */
+.filtros-container {
+  display: grid;
+  /* Definimos 2 columnas de igual ancho */
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 20px;
+  width: 80%;
+  margin: 0 auto 25px auto; /* Centramos el contenedor */
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-sizing: border-box; /* Asegura que el padding no rompa el ancho */
+}
+
+.filtro-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* Eliminamos flex: 1 ya que el grid maneja el tamaño */
+  width: 100%; 
+}
+
+.filtro-label {
+  color: #444;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.filtro-grupo input, 
+.filtro-grupo select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+/* --- 3. ACORDEONES Y LISTADO --- */
+.accordion {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.accordion summary {
+  padding: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+}
+
+.badge {
+  background: #007bff;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+}
+
+.accordion ul {
+  list-style: none;
+  padding: 0 16px 16px;
+  margin: 0;
+}
+
+.accordion li {
+  padding: 12px;
+  border-top: 1px solid #f8f9fa;
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+}
+
+/* --- 4. ESTADOS DE PAGO --- */
+.pago-si {
+  border-left: 5px solid #28a745;
+  background-color: #f6fff8;
+}
+
+.pago-no {
+  border-left: 5px solid #dc3545;
+  background-color: #fff9f9;
+}
+
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  font-style: italic;
+  background: #f9f9f9;
+  border-radius: 10px;
+}
+
+/* --- 5. RESPONSIVIDAD --- */
+@media (max-width: 600px) {
+  .filtro-grupo {
+    min-width: 100%;
+  }
+  .filtros-container {
+    grid-template-columns: 1fr;
+  }
+  .accordion summary {
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 8px;
+  }
+
+  .badge {
+    margin-left: 0;
+  }
+}
