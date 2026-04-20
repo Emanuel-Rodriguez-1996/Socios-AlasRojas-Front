@@ -11,12 +11,6 @@ export default function Admin({ preloadedCobranzas, isPreloading }) {
   // Toda la lógica de filtrado y procesamiento reside en useAdmin
   const { loading, filtros, setFiltros, sociosFiltrados } = useAdmin(preloadedCobranzas, isPreloading);
 
-  const totalReal = preloadedCobranzas
-  .filter(c => c.pago)
-  .length * 180;
-
-console.log("TOTAL REAL BACKEND:", totalReal);
-
   // Cálculo de recaudación basado en lo que el hook devuelve ya filtrado
   const granTotal = sociosFiltrados.reduce((acc, socio) => {
     const pagadoSocio = socio.filtradas

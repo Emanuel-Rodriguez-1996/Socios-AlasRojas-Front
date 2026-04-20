@@ -8,7 +8,7 @@ const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "
 const SEMESTRES = [{ label: "1er Semestre", value: "S1" }, { label: "2do Semestre", value: "S2" }];
 
 const KEYS = {
-  "Tano123": "Tesorero",
+  "T123": "Tesorero",
   "0000": "Admin"
 };
 
