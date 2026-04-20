@@ -1,0 +1,114 @@
+/* CONTENEDOR GENERAL */
+.logs-container {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px 20px;
+
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(3px);
+
+  color: #fff;
+}
+
+/* TÍTULO */
+.logs-container h2 {
+  margin: 10px 0 30px;
+  font-size: 26px;
+  text-align: center;
+}
+
+/* LISTA */
+.logs-list {
+  width: 100%;
+  max-width: 850px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* TARJETAS */
+.log-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+
+  border-left: 5px solid #3b82f6;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+
+  color: #fff;
+}
+
+/* HEADER */
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+/* USUARIO */
+.log-user {
+  font-weight: bold;
+}
+
+/* FECHA */
+.log-date {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ACCIÓN */
+.log-action {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* ========================= */
+/* 🔥 JSON CARD BLANCA */
+/* ========================= */
+
+.log-detail {
+  background: #ffffff !important;
+  padding: 12px !important;
+  border-radius: 10px;
+
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  overflow-x: auto;
+
+  /* 🔴 RESET TOTAL DEL PRE */
+  all: unset;
+  display: block;
+
+  background: #ffffff !important;
+  padding: 12px !important;
+  border-radius: 10px;
+}
+
+/* 🔥 CONTROL TOTAL DEL TEXTO */
+.log-detail code {
+  color: #111827 !important;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+
+  white-space: pre-wrap;
+  line-height: 1.4;
+
+  display: block;
+}
+
+/* 🔥 NUCLEAR (por si algo externo jode) */
+pre,
+pre *,
+code,
+code * {
+  background: #ffffff !important;
+  color: #111827 !important;
+}

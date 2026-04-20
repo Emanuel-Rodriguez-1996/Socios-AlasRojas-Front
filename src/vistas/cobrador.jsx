@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../comps/loading";
 import { useCobrador } from "../hooks/useCobrador";
+import LogsAdmin from "./LogsAdmin";
 import "./vistCobrador.css";
 
 const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -12,7 +13,7 @@ const KEYS = {
   "0000": "Admin"
 };
 
-export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, onUpdate }) {
+export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, onUpdate, setOperadorGlobal }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("pago");
   
@@ -48,15 +49,17 @@ export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, 
   }, [nroBaja, globalSocios]);
 
   const verificarClave = (e) => {
-    e.preventDefault();
-    if (KEYS[pass]) {
-      setOperador(KEYS[pass]);
-      setError(false);
-    } else {
-      setError(true);
-      setPass("");
-    }
-  };
+  e.preventDefault();
+
+  if (KEYS[pass]) {
+    setOperador(KEYS[pass]);
+    setOperadorGlobal(KEYS[pass]); // 👈 pasa al App.jsx
+    setError(false);
+  } else {
+    setError(true);
+    setPass("");
+  }
+};
 
   const ejecutarAlta = async (e) => {
     e.preventDefault();
@@ -218,7 +221,6 @@ export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, 
             </button>
           </form>
         )}
-
       </div>
     </div>
   );

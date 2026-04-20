@@ -3,11 +3,13 @@ import { useState } from "react"; // Para controlar el menú
 import { useApp } from "./hooks/useApp";
 import Cobrador from "./vistas/cobrador";
 import Admin from "./vistas/admin";
+import LogsAdmin from "./vistas/LogsAdmin";
 import "./App.css";
 
 export default function App() {
   const { socios, cobranzas, isPreloading, refreshData } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [operador, setOperador] = useState("");
 
   return (
     <div className="main-layout">
@@ -19,7 +21,7 @@ export default function App() {
 
       {/* Menú Lateral (Overlay) */}
       <nav className={`side-nav ${menuOpen ? "active" : ""}`}>
-       
+
         <div className="side-nav-logo-container">
           <img src="/fondo.jpg" alt="Logo App" className="side-nav-logo" />
         </div>
@@ -27,6 +29,10 @@ export default function App() {
         <Link to="/cobrador" onClick={() => setMenuOpen(false)}>Administrador</Link>
         <Link to="/" onClick={() => setMenuOpen(false)}>Socio</Link>
         <Link to="/" onClick={() => setMenuOpen(false)}>Ciclista</Link>
+        {operador === "Admin" && (
+          <Link to="/logs" onClick={() => setMenuOpen(false)}>
+            📋 Logs
+          </Link>)}
       </nav>
 
       <div className="content">
@@ -49,8 +55,13 @@ export default function App() {
                 globalCobranzas={cobranzas}
                 isPreloading={isPreloading}
                 onUpdate={refreshData}
+                setOperadorGlobal={setOperador}
               />
             }
+          />
+          <Route
+            path="/logs"
+            element={<LogsAdmin operador={operador} />}
           />
         </Routes>
       </div>
