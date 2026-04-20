@@ -1,13 +1,11 @@
 /* CONTENEDOR GENERAL */
 .logs-container {
   min-height: 100vh;
+  padding: 40px 20px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-
-  padding: 40px 20px;
 
   background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(3px);
@@ -15,11 +13,51 @@
   color: #fff;
 }
 
+/* ACCESO */
+.logs-no-access {
+  padding: 20px;
+  color: #fff;
+}
+
+/* CONTENIDO */
+.logs-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* TEXTO */
+.logs-text {
+  color: #fff;
+}
+
 /* TÍTULO */
-.logs-container h2 {
+.logs-title {
   margin: 10px 0 30px;
   font-size: 26px;
   text-align: center;
+}
+
+/* BOTONES */
+.btn-volver,
+.btn-delete {
+  margin: 5px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-volver {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-delete {
+  background: #ef4444;
+  color: white;
 }
 
 /* LISTA */
@@ -39,7 +77,6 @@
   padding: 14px 16px;
 
   border-left: 5px solid #3b82f6;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 
   color: #fff;
 }
@@ -51,64 +88,42 @@
   font-size: 13px;
 }
 
-/* USUARIO */
 .log-user {
   font-weight: bold;
 }
 
-/* FECHA */
 .log-date {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* ACCIÓN */
 .log-action {
-  font-size: 15px;
+  margin: 8px 0;
   font-weight: 600;
-  margin-bottom: 6px;
 }
 
-/* ========================= */
-/* 🔥 JSON CARD BLANCA */
-/* ========================= */
-
+/* JSON (CARD BLANCA) */
 .log-detail {
-  background: #ffffff !important;
-  padding: 12px !important;
+  margin-top: 8px;
+  padding: 12px;
+
+  background: #ffffff;
   border-radius: 10px;
 
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-
-  overflow-x: auto;
-
-  /* 🔴 RESET TOTAL DEL PRE */
-  all: unset;
-  display: block;
-
-  background: #ffffff !important;
-  padding: 12px !important;
-  border-radius: 10px;
-}
-
-/* 🔥 CONTROL TOTAL DEL TEXTO */
-.log-detail code {
-  color: #111827 !important;
   font-family: "Courier New", monospace;
   font-size: 13px;
+
+  color: #111827;
 
   white-space: pre-wrap;
   line-height: 1.4;
 
-  display: block;
+  overflow-x: auto;
+
+  border: 1px solid #e5e7eb;
 }
 
-/* 🔥 NUCLEAR (por si algo externo jode) */
-pre,
-pre *,
-code,
-code * {
-  background: #ffffff !important;
-  color: #111827 !important;
+.log-detail code {
+  color: #111827;
 }
