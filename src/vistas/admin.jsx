@@ -27,7 +27,7 @@ export default function Admin({ preloadedCobranzas, isPreloading }) {
     <>
     <img src="/Titulo.png" alt="" className="imgTitulo"/>
     <div className="admin">
-      
+
       {sociosFiltrados.length > 0 && (
         <h3 className="titulo-seccion">
           Recaudación total por filtros: 

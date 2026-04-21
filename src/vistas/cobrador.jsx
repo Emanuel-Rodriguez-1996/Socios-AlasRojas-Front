@@ -16,10 +16,10 @@ const KEYS = {
 export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, onUpdate, setOperadorGlobal }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("pago");
-  
+
   // Estados para Login
   const [pass, setPass] = useState("");
-  const [operador, setOperador] = useState(""); 
+  const [operador, setOperador] = useState("");
   const [error, setError] = useState(false);
 
   // Estado para Formulario de Cobro
@@ -37,9 +37,9 @@ export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, 
   // Estado para Formulario de Baja
   const [nroBaja, setNroBaja] = useState("");
   const {
-    loadingInicial, loadingAccion, registroExistente, 
-    socioValido, pagoActivo, setPagoActivo, socioActual, tipoPago, 
-    handleSubmit, handleAlta, handleBaja 
+    loadingInicial, loadingAccion, registroExistente,
+    socioValido, pagoActivo, setPagoActivo, socioActual, tipoPago,
+    handleSubmit, handleAlta, handleBaja
   } = useCobrador(formData, setFormData, globalSocios, globalCobranzas, onUpdate, operador);
 
   // Lógica para mostrar quién se va a borrar (Seguridad)
@@ -49,17 +49,17 @@ export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, 
   }, [nroBaja, globalSocios]);
 
   const verificarClave = (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (KEYS[pass]) {
-    setOperador(KEYS[pass]);
-    setOperadorGlobal(KEYS[pass]); // 👈 pasa al App.jsx
-    setError(false);
-  } else {
-    setError(true);
-    setPass("");
-  }
-};
+    if (KEYS[pass]) {
+      setOperador(KEYS[pass]);
+      setOperadorGlobal(KEYS[pass]); // 👈 pasa al App.jsx
+      setError(false);
+    } else {
+      setError(true);
+      setPass("");
+    }
+  };
 
   const ejecutarAlta = async (e) => {
     e.preventDefault();
@@ -88,9 +88,9 @@ export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, 
         <div className="login-box">
           <h2>🔐Panel Administrador</h2><br />
           <form onSubmit={verificarClave}>
-            <input 
-              type="password" 
-              placeholder="Ingrese clave..." 
+            <input
+              type="password"
+              placeholder="Ingrese clave..."
               value={pass}
               onChange={(e) => setPass(e.target.value)}
               autoFocus
@@ -119,18 +119,18 @@ export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, 
       <div className="tabs-container">
         <button className={`tab-button ${activeTab === 'pago' ? 'active' : ''}`} onClick={() => setActiveTab('pago')}>Registrar Cobro</button>
         <button className={`tab-button ${activeTab === 'alta' ? 'active' : ''}`} onClick={() => setActiveTab('alta')}>Alta Socio</button>
-        <button className={`tab-button ${activeTab === 'baja' ? 'active' : ''}`} onClick={() => setActiveTab('baja')}>Dar de Baja</button>
+        <button className="tab-button disabled" disabled>Dar de Baja (Mantenimiento)</button>
       </div>
 
       <div className="form-cobrador">
-        
+
         {/* PESTAÑA: PAGO */}
         {activeTab === 'pago' && (
           <form onSubmit={handleSubmit}>
             <div className="anio-display">Registrar Pago</div>
             <label>Período
               <select value={formData.mes} onChange={(e) => setFormData({ ...formData, mes: e.target.value })}
-               required={tipoPago !== "anual"} disabled={tipoPago === "anual"}>
+                required={tipoPago !== "anual"} disabled={tipoPago === "anual"}>
                 <option value="">{tipoPago === "anual" ? "Pago anual" : "Seleccione..."}</option>
                 {tipoPago === "semestral" && SEMESTRES.map((s, i) => <option key={i} value={s.value}>{s.label}</option>)}
                 {(!tipoPago || tipoPago === "mensual") && MESES.map((m, i) => <option key={i} value={(i + 1).toString()}>{m}</option>)}
@@ -174,53 +174,31 @@ export default function Cobrador({ globalSocios, globalCobranzas, isPreloading, 
           <form onSubmit={ejecutarAlta}>
             <div className="anio-display">Nuevo Socio</div>
             <label>Nº Socio
-              <input type="number" value={datosAlta.nro_socio} onChange={(e)=>setDatosAlta({...datosAlta, nro_socio: e.target.value})} placeholder="Ej: 101" required />
+              <input type="number" value={datosAlta.nro_socio} onChange={(e) => setDatosAlta({ ...datosAlta, nro_socio: e.target.value })} placeholder="Ej: 101" required />
             </label>
             <label>Nombre
-              <input type="text" value={datosAlta.nombre} onChange={(e)=>setDatosAlta({...datosAlta, nombre: e.target.value})} placeholder="Nombre..." required />
+              <input type="text" value={datosAlta.nombre} onChange={(e) => setDatosAlta({ ...datosAlta, nombre: e.target.value })} placeholder="Nombre..." required />
             </label>
             <label>Apellido
-              <input type="text" value={datosAlta.apellido} onChange={(e)=>setDatosAlta({...datosAlta, apellido: e.target.value})} placeholder="Apellido..." required />
+              <input type="text" value={datosAlta.apellido} onChange={(e) => setDatosAlta({ ...datosAlta, apellido: e.target.value })} placeholder="Apellido..." required />
             </label>
             <label>Teléfono
-              <input type="text" value={datosAlta.tel} onChange={(e)=>setDatosAlta({...datosAlta, tel: e.target.value})} placeholder="Tel/Cel..." />
+              <input type="text" value={datosAlta.tel} onChange={(e) => setDatosAlta({ ...datosAlta, tel: e.target.value })} placeholder="Tel/Cel..." />
             </label>
             <label>Categoria
-              <select value={datosAlta.tipo_pago} onChange={(e)=>setDatosAlta({...datosAlta, tipo_pago: e.target.value})}>
+              <select value={datosAlta.tipo_pago} onChange={(e) => setDatosAlta({ ...datosAlta, tipo_pago: e.target.value })}>
                 <option value="mensual">Mensual</option>
                 <option value="semestral">Semestral</option>
                 <option value="anual">Anual</option>
               </select>
             </label>
-            <button type="submit" className="btn-save" disabled={loadingAccion} style={{marginTop: '10px'}}>
+            <button type="submit" className="btn-save" disabled={loadingAccion} style={{ marginTop: '10px' }}>
               {loadingAccion ? <Loading tipo="mini" /> : "Guardar Socio"}
             </button>
           </form>
         )}
 
         {/* PESTAÑA: BAJA */}
-        {activeTab === 'baja' && (
-          <form onSubmit={ejecutarBaja}>
-            <div className="anio-display">Dar de Baja</div>
-            <label>Nº de Socio
-              <input type="number" value={nroBaja} onChange={(e) => setNroBaja(e.target.value)} placeholder="Nro a eliminar..." required />
-            </label>
-            
-            {socioABorrar && (
-              <div className="status-card status-pendiente">
-                <span className="status-label">Se eliminará a:</span>
-                <div className="status-badge">{socioABorrar.nombre} {socioABorrar.apellido}</div>
-              </div>
-            )}
-
-            <div className="aviso-baja">
-              <p>⚠️ Atención: Se borrará el socio y todas sus cobranzas registradas.</p>
-            </div>
-            <button type="submit" className="btn-update-status" disabled={loadingAccion || !socioABorrar} style={{backgroundColor: '#e74c3c', marginTop: '10px'}}>
-              {loadingAccion ? <Loading tipo="mini" /> : "Confirmar Baja Definitiva"}
-            </button>
-          </form>
-        )}
       </div>
     </div>
   );

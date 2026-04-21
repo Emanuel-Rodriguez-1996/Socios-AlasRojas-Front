@@ -1,0 +1,28 @@
+<button className={`tab-button ${activeTab === 'baja' ? 'active' : ''}`} onClick={() => setActiveTab('baja')}>Dar de Baja</button>
+         {/* 🚧 DESHABILITADA */}
+
+
+
+{/* PESTAÑA: BAJA */}
+        {activeTab === 'baja' && (
+          <form onSubmit={ejecutarBaja}>
+            <div className="anio-display">Dar de Baja</div>
+            <label>Nº de Socio
+              <input type="number" value={nroBaja} onChange={(e) => setNroBaja(e.target.value)} placeholder="Nro a eliminar..." required />
+            </label>
+            
+            {socioABorrar && (
+              <div className="status-card status-pendiente">
+                <span className="status-label">Se eliminará a:</span>
+                <div className="status-badge">{socioABorrar.nombre} {socioABorrar.apellido}</div>
+              </div>
+            )}
+
+            <div className="aviso-baja">
+              <p>⚠️ Atención: Se borrará el socio y todas sus cobranzas registradas.</p>
+            </div>
+            <button type="submit" className="btn-update-status" disabled={loadingAccion || !socioABorrar} style={{backgroundColor: '#e74c3c', marginTop: '10px'}}>
+              {loadingAccion ? <Loading tipo="mini" /> : "Confirmar Baja Definitiva"}
+            </button>
+          </form>
+        )}
